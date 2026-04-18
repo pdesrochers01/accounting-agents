@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LangGraph — HITL Gmail Async · Firme Comptable</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080b10;
+    --surface: #0e1219;
+    --border: #1e2535;
+    --sup: #f0b429;
+    --ing: #38bdf8;
+    --rec: #a78bfa;
+    --rep: #34d399;
+    --ar:  #fb923c;
+    --ap:  #06b6d4;
+    --onb: #f472b6;
+    --con: #e879f9;
+    --hitl: #fbbf24;
+    --webhook: #22c55e;
+    --text: #cbd5e1;
+    --muted: #475569;
+  }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 36px 16px 60px;
+  }
+
+  .page { max-width: 1100px; margin: 0 auto; }
+
+  .hdr { text-align: center; margin-bottom: 44px; }
+  .hdr h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 700;
+    color: var(--muted); letter-spacing: 3px;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .hdr h2 { font-size: 24px; font-weight: 800; color: #e2e8f0; margin-bottom: 4px; }
+  .hdr p { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── CANVAS ── */
+  .canvas { position: relative; width: 100%; height: 1260px; }
+
+  .edges-svg {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; overflow: visible;
+  }
+
+  /* ── NODES ── */
+  .node {
+    position: absolute;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid;
+    background: var(--surface);
+  }
+  .node-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    margin-bottom: 5px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .node-body {
+    font-size: 10px; color: #64748b;
+    line-height: 1.7;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .node-tools { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .ntool {
+    font-size: 9px; font-family: 'JetBrains Mono', monospace;
+    padding: 2px 6px; border-radius: 3px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border); color: #64748b;
+  }
+
+  /* ── SUPERVISOR ── */
+  .sup-box {
+    position: absolute;
+    background: #100d02;
+    border: 2px solid var(--sup);
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 0 30px rgba(240,180,41,0.12);
+  }
+  .sup-title { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--sup); text-transform:uppercase; letter-spacing:2px; margin-bottom:4px; }
+  .sup-name  { font-size:15px; font-weight:800; color:var(--sup); margin-bottom:8px; }
+  .sup-tags  { display:flex; gap:6px; flex-wrap:wrap; }
+  .sup-tag   { font-family:'JetBrains Mono',monospace; font-size:9px; background:rgba(240,180,41,0.08); border:1px solid rgba(240,180,41,0.2); border-radius:3px; padding:2px 6px; color:#a07820; }
+
+  /* ── ROUTER ── */
+  .router { position:absolute; width:90px; height:90px; display:flex; align-items:center; justify-content:center; }
+  .router-inner { width:76px; height:76px; background:#130f02; border:2px solid var(--sup); transform:rotate(45deg); box-shadow:0 0 20px rgba(240,180,41,0.15); }
+  .router-label { position:absolute; text-align:center; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:var(--sup); line-height:1.4; }
+
+  /* ── HITL BLOCK ── */
+  .hitl-block {
+    position: absolute;
+    border: 1.5px dashed var(--hitl);
+    border-radius: 10px;
+    background: rgba(251,191,36,0.04);
+    padding: 14px;
+  }
+  .hitl-block-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    color: var(--hitl); margin-bottom: 10px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  /* ── GMAIL HITL EMAIL ── */
+  .gmail-card {
+    position: absolute;
+    background: #0d1a0d;
+    border: 1.5px solid #22c55e;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .gmail-card-title { font-size: 10px; font-weight: 700; color: #22c55e; margin-bottom: 8px; }
+  .gmail-preview {
+    background: #0a120a;
+    border: 1px solid #1a3a1a;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 9px;
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .gmail-preview .from { color: #94a3b8; margin-bottom: 4px; }
+  .gmail-preview .subject { color: #e2e8f0; font-weight: 700; margin-bottom: 6px; }
+  .gmail-preview .body { color: #64748b; }
+  .gmail-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  .gbtn {
+    font-size: 9px; font-weight: 700;
+    padding: 4px 10px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .gbtn-approve { background: #14532d; color: #4ade80; border: 1px solid #166534; }
+  .gbtn-modify  { background: #1e3a5f; color: #60a5fa; border: 1px solid #1d4ed8; }
+  .gbtn-block   { background: #450a0a; color: #f87171; border: 1px solid #991b1b; }
+
+  /* ── PHONE ── */
+  .phone {
+    position: absolute;
+    width: 90px;
+    background: #111827;
+    border: 2px solid #374151;
+    border-radius: 14px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .phone-notch { width: 28px; height: 5px; background: #374151; border-radius: 3px; margin: 0 auto 6px; }
+  .phone-screen { background: #0d1a0d; border-radius: 6px; padding: 6px 4px; margin-bottom: 6px; }
+  .phone-screen .ps-from { font-family:'JetBrains Mono',monospace; font-size:7px; color:#64748b; margin-bottom:2px; }
+  .phone-screen .ps-subj { font-family:'JetBrains Mono',monospace; font-size:8px; color:#e2e8f0; font-weight:700; margin-bottom:4px; line-height:1.4; }
+  .phone-screen .ps-btn  { background:#14532d; color:#4ade80; font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; border-radius:3px; padding:3px 6px; display:inline-block; }
+  .phone-label { font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--muted); margin-top:4px; }
+
+  /* ── WEBHOOK ── */
+  .webhook-node {
+    position: absolute;
+    background: #071810;
+    border: 1.5px solid var(--webhook);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .webhook-title { font-size: 10px; font-weight: 700; color: var(--webhook); margin-bottom: 4px; }
+  .webhook-body  { font-size: 9px; color: #166534; line-height: 1.6; }
+
+  /* ── TIMEOUT ── */
+  .timeout-node {
+    position: absolute;
+    background: #1a0a0a;
+    border: 1px solid #7f1d1d;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .timeout-title { font-size: 10px; font-weight: 700; color: #f87171; margin-bottom: 3px; }
+  .timeout-body  { font-size: 9px; color: #7f1d1d; line-height: 1.5; }
+
+  /* ── CHECKPOINTER ── */
+  .checkpointer {
+    position: absolute;
+    background: #0a0f1a;
+    border: 1px dashed #334155;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+  }
+  .cp-title { font-size: 9px; color: #334155; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .cp-body  { font-size: 9px; color: #1e3a5f; line-height: 1.6; }
+
+  /* ── STATE PANEL ── */
+  .state-panel {
+    position: absolute;
+    background: #0a0f1a;
+    border: 1px dashed #1e2d45;
+    border-radius: 10px;
+    padding: 14px 12px;
+  }
+  .state-panel-title { font-family:'JetBrains Mono',monospace; font-size:9px; color:#334155; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; text-align:center; }
+  .sf { font-family:'JetBrains Mono',monospace; font-size:9px; color:#38bdf8; background:#0a1628; border:1px solid #1e3a5f; border-radius:3px; padding:3px 7px; margin-bottom:4px; display:block; }
+  .sf-hitl { color: #fbbf24; background: #1a1200; border-color: #4a3500; }
+
+  /* ── START / END ── */
+  .start-node { position:absolute; border-radius:50%; width:48px; height:48px; border:2px solid #22c55e; background:#071810; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:#22c55e; }
+  .end-node   { position:absolute; border-radius:50%; width:48px; height:48px; border:2px solid var(--muted); background:#111827; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:var(--muted); }
+
+  /* ── EDGE LABELS ── */
+  .elabel { position:absolute; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); background:var(--bg); padding:1px 5px; border-radius:3px; pointer-events:none; }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #1e2535;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  /* animations */
+  @keyframes dash { to { stroke-dashoffset: -18; } }
+  @keyframes dash-slow { to { stroke-dashoffset: -24; } }
+  .flow { stroke-dasharray:6 3; animation: dash 1.5s linear infinite; }
+  .flow-slow { stroke-dasharray:8 4; animation: dash-slow 2.5s linear infinite; }
+  .flow-hitl { stroke-dasharray:4 3; animation: dash 2s linear infinite; }
+
+  /* LEGEND */
+  .legend { margin-top:28px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 20px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; }
+  .legend-title { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; }
+  .li { display:flex; align-items:center; gap:7px; font-size:10px; color:#64748b; font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hdr">
+    <h1>LangGraph · State Graph · MVP</h1>
+    <h2>Cycle HITL Gmail Asynchrone</h2>
+    <p>interrupt() · checkpointer · webhook · reprise de thread · timeout</p>
+  </div>
+
+  <div class="canvas">
+
+    <!-- ═══════════════════════════════════════════════════
+         SVG EDGES
+    ════════════════════════════════════════════════════ -->
+    <svg class="edges-svg" viewBox="0 0 1100 1180" preserveAspectRatio="none">
+      <defs>
+        <marker id="ag"  markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#f0b429"/></marker>
+        <marker id="ai"  markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#38bdf8"/></marker>
+        <marker id="ar"  markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#a78bfa"/></marker>
+        <marker id="arep" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#34d399"/></marker>
+        <marker id="aar"  markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#fb923c"/></marker>
+        <marker id="aap"  markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#06b6d4"/></marker>
+        <marker id="aonb" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#f472b6"/></marker>
+        <marker id="acon" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#e879f9"/></marker>
+        <marker id="ahtl" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#fbbf24"/></marker>
+        <marker id="awh"  markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#22c55e"/></marker>
+        <marker id="agr"  markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#475569"/></marker>
+        <marker id="ared" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#f87171"/></marker>
+      </defs>
+
+      <!-- START → SUP -->
+      <line x1="48" y1="60" x2="115" y2="60" stroke="#22c55e" stroke-width="1.5" marker-end="url(#awh)"/>
+
+      <!-- SUP → ROUTER -->
+      <line x1="390" y1="60" x2="448" y2="60" stroke="#f0b429" stroke-width="2" class="flow" marker-end="url(#ag)"/>
+
+      <!-- ROUTER → agents (conditional) -->
+      <!-- → Ingestion -->
+      <path d="M495,38 C495,10 200,10 200,100" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#ai)"/>
+      <!-- → Réconciliation -->
+      <path d="M450,83 C450,140 130,180 130,210" stroke="#a78bfa" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#ar)"/>
+      <!-- → Reporting -->
+      <path d="M495,83 C495,140 380,180 380,210" stroke="#34d399" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arep)"/>
+      <!-- → AR -->
+      <path d="M510,83 C510,140 560,180 560,210" stroke="#fb923c" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#aar)"/>
+      <!-- → AP -->
+      <path d="M520,83 C520,140 730,180 730,210" stroke="#06b6d4" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#aap)"/>
+      <!-- → Onboarding -->
+      <path d="M530,70 C620,70 870,140 870,210" stroke="#f472b6" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#aonb)"/>
+      <!-- → Conformité -->
+      <path d="M450,83 C380,130 100,900 100,930" stroke="#e879f9" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#acon)"/>
+
+      <!-- ── HITL FLOW ──────────────────────────── -->
+      <!-- Réconciliation → interrupt -->
+      <line x1="220" y1="320" x2="220" y2="390" stroke="#fbbf24" stroke-width="1.5" class="flow-hitl" marker-end="url(#ahtl)"/>
+      <!-- AR → interrupt -->
+      <line x1="620" y1="320" x2="620" y2="390" stroke="#fbbf24" stroke-width="1.5" class="flow-hitl" marker-end="url(#ahtl)"/>
+      <!-- AP → interrupt -->
+      <line x1="800" y1="320" x2="800" y2="390" stroke="#fbbf24" stroke-width="1.5" class="flow-hitl" marker-end="url(#ahtl)"/>
+      <!-- Onboarding → interrupt -->
+      <line x1="930" y1="320" x2="930" y2="390" stroke="#fbbf24" stroke-width="1.5" class="flow-hitl" marker-end="url(#ahtl)"/>
+
+      <!-- interrupt → Gmail MCP send -->
+      <line x1="310" y1="450" x2="380" y2="520" stroke="#fbbf24" stroke-width="1.5" class="flow-hitl" marker-end="url(#ahtl)"/>
+
+      <!-- Gmail send → Chef iPhone -->
+      <line x1="560" y1="580" x2="650" y2="580" stroke="#22c55e" stroke-width="1.5" class="flow-slow" marker-end="url(#awh)"/>
+
+      <!-- Chef approve → Webhook -->
+      <line x1="696" y1="640" x2="696" y2="700" stroke="#22c55e" stroke-width="1.5" marker-end="url(#awh)"/>
+
+      <!-- Webhook → checkpointer resume -->
+      <line x1="696" y1="760" x2="500" y2="820" stroke="#22c55e" stroke-width="1.5" class="flow-slow" marker-end="url(#awh)"/>
+
+      <!-- Checkpointer → Supervisor (reprise) -->
+      <path d="M400,840 C200,840 200,120 250,80" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#ag)"/>
+
+      <!-- Timeout path -->
+      <line x1="860" y1="700" x2="860" y2="760" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#ared)"/>
+      <!-- Timeout → Supervisor escalade -->
+      <path d="M860,800 C1000,800 1000,100 560,70" stroke="#f87171" stroke-width="1" fill="none" stroke-dasharray="3,3" opacity="0.5" marker-end="url(#ag)"/>
+
+      <!-- Reporting → END -->
+      <line x1="440" y1="320" x2="440" y2="1080" stroke="#34d399" stroke-width="1" opacity="0.4" marker-end="url(#agr)"/>
+      <!-- Ingestion → END -->
+      <line x1="200" y1="190" x2="200" y2="1080" stroke="#38bdf8" stroke-width="1" opacity="0.3" stroke-dasharray="4,4" marker-end="url(#agr)"/>
+      <!-- Conformité → END -->
+      <line x1="100" y1="1000" x2="100" y2="1080" stroke="#e879f9" stroke-width="1" opacity="0.4" marker-end="url(#agr)"/>
+
+      <!-- all → global END -->
+      <line x1="100" y1="1120" x2="540" y2="1140" stroke="#475569" stroke-width="1" marker-end="url(#agr)"/>
+      <line x1="200" y1="1120" x2="540" y2="1140" stroke="#475569" stroke-width="1" marker-end="url(#agr)"/>
+      <line x1="440" y1="1120" x2="540" y2="1140" stroke="#475569" stroke-width="1" marker-end="url(#agr)"/>
+
+    </svg>
+
+    <!-- ═══════════════════════════════════════════════════
+         NODES
+    ════════════════════════════════════════════════════ -->
+
+    <!-- START -->
+    <div class="start-node" style="left:0px; top:36px;">START</div>
+
+    <!-- SUPERVISOR -->
+    <div class="sup-box" style="left:115px; top:30px; width:275px;">
+      <div class="sup-title">Nœud Orchestrateur</div>
+      <div class="sup-name">⚙ supervisor_node</div>
+      <div class="sup-tags">
+        <span class="sup-tag">StateGraph</span>
+        <span class="sup-tag">conditional_edges</span>
+        <span class="sup-tag">interrupt()</span>
+        <span class="sup-tag">checkpointer</span>
+        <span class="sup-tag">thread_id</span>
+      </div>
+    </div>
+
+    <!-- ROUTER -->
+    <div class="router" style="left:448px; top:18px;">
+      <div class="router-inner"></div>
+      <div class="router-label">route_to<br>agent</div>
+    </div>
+
+    <!-- SECTION: AGENTS -->
+    <div class="section-label" style="left:8px; top:100px; height:240px; color:#1e2d3a;">AGENTS</div>
+
+    <!-- Agent Ingestion -->
+    <div class="node" style="border-color:#38bdf8; left:110px; top:100px; width:180px;">
+      <div class="node-title" style="color:#38bdf8">📥 ingestion_node</div>
+      <div class="node-body">read_gmail()<br>extract_doc()<br>classify_type()<br>create_qbo_tx()</div>
+      <div class="node-tools">
+        <span class="ntool">Gmail MCP</span><span class="ntool">QBO MCP</span><span class="ntool">LLM</span>
+      </div>
+    </div>
+
+    <!-- Agent Réconciliation -->
+    <div class="node" style="border-color:#a78bfa; left:40px; top:210px; width:185px;">
+      <div class="node-title" style="color:#a78bfa">🔁 reconcil_node</div>
+      <div class="node-body">fetch_qbo_tx()<br>fetch_bank_stmt()<br>diff_transactions()<br>flag_gaps()</div>
+      <div class="node-tools">
+        <span class="ntool">QBO MCP</span><span class="ntool">Drive MCP</span>
+      </div>
+    </div>
+
+    <!-- Agent Reporting -->
+    <div class="node" style="border-color:#34d399; left:300px; top:210px; width:175px;">
+      <div class="node-title" style="color:#34d399">📊 reporting_node</div>
+      <div class="node-body">gen_pnl()<br>gen_cashflow()<br>format_report()<br>send_gmail()</div>
+      <div class="node-tools">
+        <span class="ntool">QBO MCP</span><span class="ntool">Gmail MCP</span>
+      </div>
+    </div>
+
+    <!-- Agent AR -->
+    <div class="node" style="border-color:#fb923c; left:470px; top:210px; width:170px;">
+      <div class="node-title" style="color:#fb923c">⏰ ar_node</div>
+      <div class="node-body">list_open_invoices()<br>check_due_dates()<br>draft_reminder()<br>send_gmail()</div>
+      <div class="node-tools">
+        <span class="ntool">QBO MCP</span><span class="ntool">Gmail MCP</span>
+      </div>
+    </div>
+
+    <!-- Agent AP -->
+    <div class="node" style="border-color:#06b6d4; left:650px; top:210px; width:175px;">
+      <div class="node-title" style="color:#06b6d4">💳 ap_node</div>
+      <div class="node-body">receive_vendor_invoice()<br>verify_purchase_order()<br>schedule_payment()<br>detect_duplicates()</div>
+      <div class="node-tools">
+        <span class="ntool">Gmail MCP</span><span class="ntool">QBO MCP</span>
+      </div>
+    </div>
+
+    <!-- Agent Onboarding -->
+    <div class="node" style="border-color:#f472b6; left:835px; top:210px; width:175px;">
+      <div class="node-title" style="color:#f472b6">🆕 onboarding_node</div>
+      <div class="node-body">parse_email()<br>create_qbo_customer()<br>gen_welcome_docs()<br>send_gmail()</div>
+      <div class="node-tools">
+        <span class="ntool">Gmail MCP</span><span class="ntool">QBO MCP</span>
+      </div>
+    </div>
+
+    <!-- ── SECTION HITL ── -->
+    <div class="section-label" style="left:8px; top:380px; height:500px; color:#3a2e00;">HITL ASYNC</div>
+
+    <!-- HITL BLOCK global -->
+    <div class="hitl-block" style="left:30px; top:375px; width:1040px; height:510px;">
+      <div class="hitl-block-title">⏸ Cycle HITL Asynchrone — interrupt() + Gmail + Webhook + Checkpointer</div>
+
+      <!-- interrupt nodes -->
+      <!-- interrupt réconcil -->
+      <div style="position:absolute; left:155px; top:40px; background:#1a1200; border:1px dashed #fbbf24; border-radius:6px; padding:6px 10px; font-family:'JetBrains Mono',monospace; font-size:9px; color:#fbbf24; text-align:center;">
+        interrupt()<br><span style="color:#4a3500; font-size:8px;">thread suspendu</span>
+      </div>
+
+      <!-- interrupt AR -->
+      <div style="position:absolute; left:520px; top:40px; background:#1a1200; border:1px dashed #fbbf24; border-radius:6px; padding:6px 10px; font-family:'JetBrains Mono',monospace; font-size:9px; color:#fbbf24; text-align:center;">
+        interrupt()<br><span style="color:#4a3500; font-size:8px;">thread suspendu</span>
+      </div>
+
+      <!-- interrupt AP -->
+      <div style="position:absolute; left:680px; top:40px; background:#1a1200; border:1px dashed #fbbf24; border-radius:6px; padding:6px 10px; font-family:'JetBrains Mono',monospace; font-size:9px; color:#06b6d4; text-align:center;">
+        interrupt()<br><span style="color:#064e5a; font-size:8px;">approbation paiement</span>
+      </div>
+
+      <!-- interrupt Onboarding -->
+      <div style="position:absolute; left:865px; top:40px; background:#1a1200; border:1px dashed #fbbf24; border-radius:6px; padding:6px 10px; font-family:'JetBrains Mono',monospace; font-size:9px; color:#fbbf24; text-align:center;">
+        interrupt()<br><span style="color:#4a3500; font-size:8px;">thread suspendu</span>
+      </div>
+
+      <!-- Gmail send node -->
+      <div class="gmail-card" style="left:310px; top:120px; width:260px;">
+        <div class="gmail-card-title">📧 Gmail MCP — send_hitl_email()</div>
+        <div class="gmail-preview">
+          <div class="from">De : agent@firme.com</div>
+          <div class="subject">⚠️ Approbation requise — Tremblay Inc.</div>
+          <div class="body">
+            Facture #2024-0892 · 12 000 $<br>
+            Retard : 45 jours<br>
+            Suggestion : relance formelle<br>
+            <br>
+            <span style="color:#94a3b8;">thread_id: abc-123</span>
+          </div>
+        </div>
+        <div class="gmail-btns">
+          <span class="gbtn gbtn-approve">✅ Approuver</span>
+          <span class="gbtn gbtn-modify">✏️ Modifier</span>
+          <span class="gbtn gbtn-block">❌ Bloquer</span>
+        </div>
+      </div>
+
+      <!-- iPhone -->
+      <div class="phone" style="left:610px; top:130px;">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="ps-from">agent@firme.com</div>
+          <div class="ps-subj">⚠️ Approbation — Tremblay 12k$</div>
+          <div class="ps-btn">✅ Approuver</div>
+        </div>
+        <div class="phone-label">Chef comptable<br>iPhone · Gmail</div>
+      </div>
+
+      <!-- Webhook node -->
+      <div class="webhook-node" style="left:636px; top:290px; width:200px;">
+        <div class="webhook-title">🔗 FastAPI Webhook</div>
+        <div class="webhook-body">
+          POST /hitl/decision<br>
+          { thread_id, decision,<br>
+          &nbsp;&nbsp;modifier_notes }<br>
+          → resume_thread()
+        </div>
+      </div>
+
+      <!-- Timeout node -->
+      <div class="timeout-node" style="left:856px; top:290px; width:190px;">
+        <div class="timeout-title">⏱ Timeout Handler</div>
+        <div class="timeout-body">
+          Si pas de réponse<br>
+          dans 4h → escalade<br>
+          supervisor_node<br>
+          <span style="color:#f87171;">status: "timeout"</span>
+        </div>
+      </div>
+
+      <!-- Checkpointer resume -->
+      <div class="checkpointer" style="left:360px; top:390px; width:240px;">
+        <div class="cp-title">SqliteSaver — checkpointer</div>
+        <div class="cp-body">
+          thread_id: abc-123<br>
+          state: { ...snapshot }<br>
+          decision: "approve"<br>
+          → graph.invoke(resume)<br>
+          → supervisor_node reprend
+        </div>
+      </div>
+
+    </div><!-- end hitl-block -->
+
+    <!-- Agent Conformité (hors HITL) -->
+    <div class="node" style="border-color:#e879f9; left:30px; top:930px; width:185px;">
+      <div class="node-title" style="color:#e879f9">🔍 conformite_node</div>
+      <div class="node-body">get_fiscal_deadlines()<br>check_qbo_completeness()<br>flag_missing_data()<br>send_alert_gmail()</div>
+      <div class="node-tools">
+        <span class="ntool">QBO MCP</span><span class="ntool">Cal MCP</span><span class="ntool">Gmail MCP</span>
+      </div>
+    </div>
+
+    <!-- STATE PANEL -->
+    <div class="state-panel" style="right:0px; top:930px; width:175px;">
+      <div class="state-panel-title">SharedState</div>
+      <span class="sf">client_id: str</span>
+      <span class="sf">email_raw: str</span>
+      <span class="sf">documents: list</span>
+      <span class="sf">qbo_tx: list</span>
+      <span class="sf">reconcil_gaps: list</span>
+      <span class="sf">open_invoices: list</span>
+      <span class="sf">vendor_bills: list</span>
+      <span class="sf">report_url: str</span>
+      <span class="sf">alerts: list</span>
+      <span class="sf sf-hitl">hitl_pending: bool</span>
+      <span class="sf sf-hitl">hitl_decision: str</span>
+      <span class="sf sf-hitl">thread_id: str</span>
+      <span class="sf sf-hitl">timeout_at: datetime</span>
+      <span class="sf">next_agent: str</span>
+      <span class="sf">errors: list</span>
+    </div>
+
+    <!-- END nodes -->
+    <div class="end-node" style="left:76px; top:1080px;">END</div>
+    <div class="end-node" style="left:176px; top:1080px;">END</div>
+    <div class="end-node" style="left:416px; top:1080px;">END</div>
+
+    <!-- GLOBAL END -->
+    <div class="end-node" style="left:540px; top:1128px; width:60px; height:60px; border-width:2.5px; font-size:10px;">END</div>
+
+    <!-- EDGE LABELS -->
+    <div class="elabel" style="left:400px; top:44px; color:#f0b429;">invoke()</div>
+    <div class="elabel" style="left:470px; top:14px; color:#38bdf8; font-size:8px;">email entrant</div>
+    <div class="elabel" style="left:160px; top:155px; color:#a78bfa; font-size:8px;">relevé bancaire</div>
+    <div class="elabel" style="left:354px; top:164px; color:#34d399; font-size:8px;">scheduled</div>
+    <div class="elabel" style="left:510px; top:155px; color:#fb923c; font-size:8px;">invoice due</div>
+    <div class="elabel" style="left:690px; top:155px; color:#06b6d4; font-size:8px;">vendor bill</div>
+    <div class="elabel" style="left:855px; top:155px; color:#f472b6; font-size:8px;">new client</div>
+    <div class="elabel" style="left:192px; top:360px; color:#fbbf24; font-size:8px;">gaps > 0</div>
+    <div class="elabel" style="left:560px; top:360px; color:#fbbf24; font-size:8px;">escalade AR</div>
+    <div class="elabel" style="left:728px; top:360px; color:#06b6d4; font-size:8px;">approbation AP</div>
+    <div class="elabel" style="left:900px; top:360px; color:#fbbf24; font-size:8px;">nouveau client</div>
+    <div class="elabel" style="left:600px; top:562px; color:#22c55e; font-size:8px;">push Gmail</div>
+    <div class="elabel" style="left:628px; top:672px; color:#22c55e; font-size:8px;">1 clic iPhone</div>
+    <div class="elabel" style="left:390px; top:806px; color:#22c55e; font-size:8px;">resume thread</div>
+    <div class="elabel" style="left:220px; top:860px; color:#22c55e; font-size:8px;">reprend ici</div>
+    <div class="elabel" style="left:876px; top:756px; color:#f87171; font-size:8px;">4h timeout</div>
+
+  </div><!-- end canvas -->
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <span class="legend-title">Légende</span>
+    <div class="li">
+      <svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#f0b429" stroke-width="2" stroke-dasharray="5,2"/></svg>
+      Edge principal (superviseur)
+    </div>
+    <div class="li">
+      <svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/></svg>
+      Conditional edge (routing)
+    </div>
+    <div class="li">
+      <svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3,2"/></svg>
+      ⏸ HITL interrupt()
+    </div>
+    <div class="li">
+      <svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="5,3"/></svg>
+      Reprise webhook → checkpointer
+    </div>
+    <div class="li">
+      <svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3,3"/></svg>
+      Timeout → escalade
+    </div>
+    <div class="li" style="color:#fbbf24;">■ SharedState HITL fields</div>
+    <div class="li"><div style="width:12px;height:12px;background:#06b6d4;border-radius:2px;margin-right:3px;"></div>Agent AP / Fournisseurs</div>
+  </div>
+
+</div>
+</body>
+</html>

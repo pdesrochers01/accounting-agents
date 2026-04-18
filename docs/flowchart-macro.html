@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowchart Macro — Firme Comptable AI · v3</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --border: #252a35;
+    --supervisor: #f0b429;
+    --ingestion: #38bdf8;
+     --reconcil: #a78bfa;
+    --reporting: #34d399;
+    --ar: #fb923c;
+    --ap: #06b6d4;
+    --onboarding: #f472b6;
+    --conformite: #e879f9;
+    --mcp: #64748b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --hitl: #fbbf24;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  .page { max-width: 1100px; margin: 0 auto; }
+
+  /* HEADER */
+  .header { text-align: center; margin-bottom: 48px; }
+  .header h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--supervisor);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .header p { font-size: 13px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+
+  /* MCP LAYER — top */
+  .mcp-layer {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .mcp-pill {
+    background: #1a1f2e;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mcp-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--mcp);
+  }
+  .mcp-label {
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  /* ARROW */
+  .arrow-down {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  /* SUPERVISOR */
+  .supervisor-wrap { display: flex; justify-content: center; margin-bottom: 8px; }
+  .supervisor {
+    background: #1a1505;
+    border: 2px solid var(--supervisor);
+    border-radius: 12px;
+    padding: 18px 36px;
+    text-align: center;
+    position: relative;
+    min-width: 340px;
+    box-shadow: 0 0 30px rgba(240,180,41,0.12);
+    animation: pulse-gold 3s ease-in-out infinite;
+  }
+  @keyframes pulse-gold {
+    0%, 100% { box-shadow: 0 0 20px rgba(240,180,41,0.10); }
+    50% { box-shadow: 0 0 40px rgba(240,180,41,0.25); }
+  }
+  .supervisor .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--supervisor);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .supervisor .name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--supervisor);
+    margin-bottom: 8px;
+  }
+  .supervisor .desc {
+    font-size: 11px;
+    color: #a0850a;
+    line-height: 1.6;
+  }
+  .supervisor .tags {
+    display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap;
+  }
+  .supervisor .tag {
+    background: rgba(240,180,41,0.12);
+    border: 1px solid rgba(240,180,41,0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--supervisor);
+  }
+
+  /* ROUTING ARROWS */
+  .routing {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    margin: 4px 0 4px;
+    height: 40px;
+  }
+  .routing svg { width: 100%; max-width: 900px; height: 40px; }
+
+  /* AGENTS GRID */
+  .agents {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .agent {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 16px;
+    border: 1.5px solid var(--border);
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .agent:hover {
+    transform: translateY(-3px);
+  }
+
+  .agent-ingestion  { border-color: var(--ingestion);  }
+  .agent-reconcil   { border-color: var(--reconcil);   }
+  .agent-reporting  { border-color: var(--reporting);  }
+  .agent-ar         { border-color: var(--ar);         }
+  .agent-ap         { border-color: var(--ap);         }
+  .agent-onboarding { border-color: var(--onboarding); }
+  .agent-conformite { border-color: var(--conformite); }
+
+  .agent-ingestion:hover  { box-shadow: 0 8px 24px rgba(56,189,248,0.15); }
+  .agent-reconcil:hover   { box-shadow: 0 8px 24px rgba(167,139,250,0.15); }
+  .agent-reporting:hover  { box-shadow: 0 8px 24px rgba(52,211,153,0.15); }
+  .agent-ar:hover         { box-shadow: 0 8px 24px rgba(251,146,60,0.15); }
+  .agent-ap:hover         { box-shadow: 0 8px 24px rgba(6,182,212,0.15); }
+  .agent-onboarding:hover { box-shadow: 0 8px 24px rgba(244,114,182,0.15); }
+  .agent-conformite:hover { box-shadow: 0 8px 24px rgba(232,121,249,0.15); }
+
+  .agent-num {
+    position: absolute;
+    top: -10px; left: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .num-ingestion  { background: var(--ingestion);  color: #0c2233; }
+  .num-reconcil   { background: var(--reconcil);   color: #1e0a3c; }
+  .num-reporting  { background: var(--reporting);  color: #042f1e; }
+  .num-ar         { background: var(--ar);         color: #3a1500; }
+  .num-ap         { background: var(--ap);         color: #012a33; }
+  .num-onboarding { background: var(--onboarding); color: #3b0a26; }
+  .num-conformite { background: var(--conformite); color: #3b0a3f; }
+
+  .agent-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    margin-top: 4px;
+  }
+  .c-ingestion  { color: var(--ingestion); }
+  .c-reconcil   { color: var(--reconcil); }
+  .c-reporting  { color: var(--reporting); }
+  .c-ar         { color: var(--ar); }
+  .c-ap         { color: var(--ap); }
+  .c-onboarding { color: var(--onboarding); }
+  .c-conformite { color: var(--conformite); }
+
+  .agent-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .agent-tools {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px;
+  }
+  .tool-pill {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: #94a3b8;
+  }
+
+  .hitl-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    background: rgba(251,191,36,0.1);
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--hitl);
+  }
+
+  /* HITL ASYNC SECTION */
+  .hitl-section {
+    margin: 28px 0 0;
+    border: 1.5px dashed var(--hitl);
+    border-radius: 14px;
+    padding: 20px;
+    background: rgba(251,191,36,0.03);
+  }
+  .hitl-section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--hitl);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .hitl-flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .hitl-step {
+    background: #151208;
+    border: 1px solid #3a2e00;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .hitl-step-icon { font-size: 18px; margin-bottom: 4px; }
+  .hitl-step-name { font-size: 10px; font-weight: 700; color: var(--hitl); margin-bottom: 3px; }
+  .hitl-step-desc { font-size: 9px; color: #6b5a00; line-height: 1.5; }
+  .hitl-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #3a2e00;
+  }
+  .hitl-levels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #2a2000;
+  }
+  .hlevel {
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    border: 1px solid;
+  }
+  .hlevel-title { font-weight: 700; margin-bottom: 5px; font-size: 11px; }
+  .hlevel-desc  { line-height: 1.6; }
+  .hlevel-1 { background: #071810; border-color: #166534; }
+  .hlevel-1 .hlevel-title { color: #4ade80; }
+  .hlevel-1 .hlevel-desc  { color: #166534; }
+  .hlevel-2 { background: #0a1020; border-color: #1d4ed8; }
+  .hlevel-2 .hlevel-title { color: #60a5fa; }
+  .hlevel-2 .hlevel-desc  { color: #1d4ed8; }
+  .hlevel-3 { background: #150d02; border-color: #b45309; }
+  .hlevel-3 .hlevel-title { color: var(--hitl); }
+  .hlevel-3 .hlevel-desc  { color: #78400a; }
+  .hlevel-4 { background: #1a0505; border-color: #991b1b; }
+  .hlevel-4 .hlevel-title { color: #f87171; }
+  .hlevel-4 .hlevel-desc  { color: #7f1d1d; }
+
+  /* TIMEOUT + WEBHOOK row */
+  .infra-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .infra-box {
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    border: 1px solid;
+  }
+  .infra-box-title { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+  .infra-box-body  { font-size: 10px; line-height: 1.7; }
+  .infra-webhook { background: #071810; border-color: #166534; }
+  .infra-webhook .infra-box-title { color: #22c55e; }
+  .infra-webhook .infra-box-body  { color: #166534; }
+  .infra-timeout { background: #1a0505; border-color: #7f1d1d; }
+  .infra-timeout .infra-box-title { color: #f87171; }
+  .infra-timeout .infra-box-body  { color: #7f1d1d; }
+
+  /* STATE BOX */
+  .state-wrap { display: flex; justify-content: center; margin: 20px 0 0; }
+  .state-box {
+    background: #0f1520;
+    border: 1px dashed #2d3748;
+    border-radius: 10px;
+    padding: 16px 28px;
+    max-width: 700px;
+    width: 100%;
+  }
+  .state-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .state-fields {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  }
+  .state-field {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: #1a2035;
+    border: 1px solid #2d3748;
+    border-radius: 4px;
+    padding: 4px 12px;
+    color: #7dd3fc;
+  }
+
+  /* LEGEND */
+  .legend {
+    margin-top: 28px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>FLOWCHART MACRO — FIRME COMPTABLE AI · v3</h1>
+    <p>Supervisor + 7 agents · HITL Gmail Async · LangGraph · Vue macro</p>
+  </div>
+
+  <!-- MCP SERVERS LAYER -->
+  <div class="mcp-label">MCP Servers disponibles</div>
+  <div class="mcp-layer">
+    <div class="mcp-pill"><div class="dot" style="background:#38bdf8"></div>Gmail MCP</div>
+    <div class="mcp-pill"><div class="dot" style="background:#a78bfa"></div>QBO MCP (Intuit)</div>
+    <div class="mcp-pill"><div class="dot" style="background:#34d399"></div>Google Drive MCP</div>
+    <div class="mcp-pill"><div class="dot" style="background:#fb923c"></div>Google Calendar MCP</div>
+    <div class="mcp-pill"><div class="dot" style="background:#e879f9"></div>Zapier MCP</div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <!-- SUPERVISOR -->
+  <div class="supervisor-wrap">
+    <div class="supervisor">
+      <div class="label">Orchestrateur central</div>
+      <div class="name">⚙ Supervisor Agent</div>
+      <div class="desc">
+        Reçoit chaque événement entrant · Analyse le contexte · Route vers le bon agent<br>
+        Gère l'état partagé · Déclenche les HITL · Relance en cas d'erreur
+      </div>
+      <div class="tags">
+        <span class="tag">LangGraph StateGraph</span>
+        <span class="tag">shared state</span>
+        <span class="tag">conditional edges</span>
+        <span class="tag">checkpointer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTING VISUAL -->
+  <div class="routing">
+    <svg viewBox="0 0 900 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- horizontal bar -->
+      <line x1="150" y1="8" x2="750" y2="8" stroke="#252a35" stroke-width="1.5"/>
+      <!-- verticals to each agent -->
+      <line x1="150" y1="8" x2="150" y2="38" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <line x1="300" y1="8" x2="300" y2="38" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <line x1="450" y1="8" x2="450" y2="38" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <line x1="600" y1="8" x2="600" y2="38" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <line x1="720" y1="8" x2="720" y2="38" stroke="#f472b6" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <line x1="850" y1="8" x2="850" y2="38" stroke="#e879f9" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <!-- stem from supervisor -->
+      <line x1="450" y1="0" x2="450" y2="8" stroke="#f0b429" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <!-- AGENTS -->
+  <div class="agents">
+
+    <!-- 1. Ingestion -->
+    <div class="agent agent-ingestion">
+      <div class="agent-num num-ingestion">01</div>
+      <div class="agent-name c-ingestion">📥 Agent Ingestion</div>
+      <div class="agent-desc">
+        Surveille Gmail · Détecte factures, reçus, relevés · Extrait les données clés (montant, fournisseur, date, taxes) · Crée la transaction dans QBO
+      </div>
+      <div class="agent-tools">
+        <span class="tool-pill">Gmail MCP</span>
+        <span class="tool-pill">QBO MCP</span>
+        <span class="tool-pill">LLM extract</span>
+      </div>
+    </div>
+
+    <!-- 2. Réconciliation -->
+    <div class="agent agent-reconcil">
+      <div class="agent-num num-reconcil">02</div>
+      <div class="agent-name c-reconcil">🔁 Agent Réconciliation</div>
+      <div class="agent-desc">
+        Compare transactions QBO vs relevés bancaires · Identifie écarts et doublons · Propose corrections
+      </div>
+      <div class="agent-tools">
+        <span class="tool-pill">QBO MCP</span>
+        <span class="tool-pill">Drive MCP</span>
+      </div>
+      <div class="hitl-badge">⏸ HITL — approbation comptable</div>
+    </div>
+
+    <!-- 3. Reporting -->
+    <div class="agent agent-reporting">
+      <div class="agent-num num-reporting">03</div>
+      <div class="agent-name c-reporting">📊 Agent Reporting</div>
+      <div class="agent-desc">
+        Génère P&L, balance sheet, cash flow · Formate · Envoie aux clients par Gmail · Détecte anomalies
+      </div>
+      <div class="agent-tools">
+        <span class="tool-pill">QBO MCP</span>
+        <span class="tool-pill">Gmail MCP</span>
+        <span class="tool-pill">Drive MCP</span>
+      </div>
+    </div>
+
+    <!-- 4. AR / Relances -->
+    <div class="agent agent-ar">
+      <div class="agent-num num-ar">04</div>
+      <div class="agent-name c-ar">⏰ Agent AR / Relances</div>
+      <div class="agent-desc">
+        Surveille factures ouvertes QBO · Envoie relances Gmail selon calendrier · Escalade si non-payé
+      </div>
+      <div class="agent-tools">
+        <span class="tool-pill">QBO MCP</span>
+        <span class="tool-pill">Gmail MCP</span>
+        <span class="tool-pill">Calendar MCP</span>
+      </div>
+      <div class="hitl-badge">⏸ HITL — avant escalade</div>
+    </div>
+
+    <!-- 5. AP / Comptes à payer -->
+    <div class="agent agent-ap">
+      <div class="agent-num num-ap">05</div>
+      <div class="agent-name c-ap">💳 Agent AP / Fournisseurs</div>
+      <div class="agent-desc">
+        Reçoit factures fournisseurs · Vérifie vs bons de commande QBO · Planifie paiements · Détecte doublons
+      </div>
+      <div class="agent-tools">
+        <span class="tool-pill">Gmail MCP</span>
+        <span class="tool-pill">QBO MCP</span>
+        <span class="tool-pill">Calendar MCP</span>
+      </div>
+      <div class="hitl-badge">⏸ HITL — approbation paiement</div>
+    </div>
+
+    <!-- 6. Onboarding -->
+    <div class="agent agent-onboarding">
+      <div class="agent-num num-onboarding">06</div>
+      <div class="agent-name c-onboarding">🆕 Agent Onboarding</div>
+      <div class="agent-desc">
+        Reçoit email nouveau client · Crée profil QBO · Génère et envoie documents d'accueil par Gmail
+      </div>
+      <div class="agent-tools">
+        <span class="tool-pill">Gmail MCP</span>
+        <span class="tool-pill">QBO MCP</span>
+        <span class="tool-pill">Drive MCP</span>
+      </div>
+      <div class="hitl-badge">⏸ HITL — validation profil</div>
+    </div>
+
+    <!-- 7. Conformité -->
+    <div class="agent agent-conformite">
+      <div class="agent-num num-conformite">07</div>
+      <div class="agent-name c-conformite">🔍 Agent Conformité</div>
+      <div class="agent-desc">
+        Surveille deadlines fiscales · Vérifie complétude données QBO · Alerte comptable via Gmail
+      </div>
+      <div class="agent-tools">
+        <span class="tool-pill">QBO MCP</span>
+        <span class="tool-pill">Calendar MCP</span>
+        <span class="tool-pill">Gmail MCP</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SHARED STATE -->
+  <div class="arrow-down" style="margin-top:16px;">↕</div>
+  <div class="state-wrap">
+    <div class="state-box">
+      <div class="state-title">État partagé — SharedState (lu/écrit par tous les agents)</div>
+      <div class="state-fields">
+        <span class="state-field">client_id</span>
+        <span class="state-field">email_raw</span>
+        <span class="state-field">documents[]</span>
+        <span class="state-field">qbo_transactions[]</span>
+        <span class="state-field">reconcil_gaps[]</span>
+        <span class="state-field">invoices_open[]</span>
+        <span class="state-field">report_url</span>
+        <span class="state-field">alerts[]</span>
+        <span class="state-field" style="background:#1a1200; border-color:#4a3500; color:#fbbf24;">hitl_pending</span>
+        <span class="state-field" style="background:#1a1200; border-color:#4a3500; color:#fbbf24;">hitl_decision</span>
+        <span class="state-field" style="background:#1a1200; border-color:#4a3500; color:#fbbf24;">thread_id</span>
+        <span class="state-field" style="background:#1a1200; border-color:#4a3500; color:#fbbf24;">timeout_at</span>
+        <span class="state-field">next_agent</span>
+        <span class="state-field">errors[]</span>
+      </div>
+      <div style="margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:#4a3500; text-align:center;">
+        ■ champs en jaune = spécifiques au cycle HITL
+      </div>
+    </div>
+  </div>
+
+  <!-- HITL ASYNC SECTION -->
+  <div class="hitl-section">
+    <div class="hitl-section-title">⏸ Cycle HITL Asynchrone — interrupt() · Gmail · Webhook · Checkpointer</div>
+
+    <!-- FLOW STEPS -->
+    <div class="hitl-flow">
+      <div class="hitl-step">
+        <div class="hitl-step-icon">⛔</div>
+        <div class="hitl-step-name">interrupt()</div>
+        <div class="hitl-step-desc">Agent suspend<br>le thread<br>état persisté</div>
+      </div>
+      <div class="hitl-arrow">→</div>
+      <div class="hitl-step">
+        <div class="hitl-step-icon">📧</div>
+        <div class="hitl-step-name">Gmail MCP</div>
+        <div class="hitl-step-desc">Email structuré<br>contexte + suggestion<br>3 boutons d'action</div>
+      </div>
+      <div class="hitl-arrow">→</div>
+      <div class="hitl-step">
+        <div class="hitl-step-icon">📱</div>
+        <div class="hitl-step-name">iPhone Gmail</div>
+        <div class="hitl-step-desc">Chef comptable<br>1 clic depuis<br>n'importe où</div>
+      </div>
+      <div class="hitl-arrow">→</div>
+      <div class="hitl-step">
+        <div class="hitl-step-icon">🔗</div>
+        <div class="hitl-step-name">FastAPI Webhook</div>
+        <div class="hitl-step-desc">POST /hitl/decision<br>{ thread_id,<br>decision }</div>
+      </div>
+      <div class="hitl-arrow">→</div>
+      <div class="hitl-step">
+        <div class="hitl-step-icon">▶</div>
+        <div class="hitl-step-name">Checkpointer</div>
+        <div class="hitl-step-desc">SqliteSaver<br>reprend le thread<br>→ supervisor</div>
+      </div>
+    </div>
+
+    <!-- INFRA ROW -->
+    <div class="infra-row">
+      <div class="infra-box infra-webhook">
+        <div class="infra-box-title">🔗 FastAPI Webhook — POST /hitl/decision</div>
+        <div class="infra-box-body">
+          Reçoit : { thread_id, decision: "approve"|"modify"|"block", notes? }<br>
+          Appelle : graph.invoke(None, config={"thread_id": thread_id})<br>
+          Résultat : thread LangGraph reprend exactement là où il était suspendu
+        </div>
+      </div>
+      <div class="infra-box infra-timeout">
+        <div class="infra-box-title">⏱ Timeout Handler — 4h sans réponse</div>
+        <div class="infra-box-body">
+          Si le chef ne répond pas dans 4h :<br>
+          → status: "timeout" injecté dans SharedState<br>
+          → supervisor_node escalade · thread relancé automatiquement
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 NIVEAUX HITL -->
+    <div class="hitl-levels">
+      <div class="hlevel hlevel-1">
+        <div class="hlevel-title">N1 — Automatique</div>
+        <div class="hlevel-desc">Aucune approbation requise. Relances 1er niveau, rapports standard, alertes routine.</div>
+      </div>
+      <div class="hlevel hlevel-2">
+        <div class="hlevel-title">N2 — Notification</div>
+        <div class="hlevel-desc">Agent agit + notifie. Chef peut annuler dans la fenêtre définie. Faible risque.</div>
+      </div>
+      <div class="hlevel hlevel-3">
+        <div class="hlevel-title">N3 — Approbation ⏸</div>
+        <div class="hlevel-desc">Agent prépare, chef décide avant action. Écarts réconciliation, escalades clients, fiscal.</div>
+      </div>
+      <div class="hlevel hlevel-4">
+        <div class="hlevel-title">N4 — Transfert humain</div>
+        <div class="hlevel-desc">Cas hors règles connues. Agent documente et transfère complètement au comptable.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#f0b429"></div>Supervisor (orchestrateur)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div>Agent Ingestion</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Agent Réconciliation</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Agent Reporting</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>Agent AR / Relances</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div>Agent AP / Fournisseurs</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>Agent Onboarding</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e879f9"></div>Agent Conformité</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fbbf24; border-radius:50%"></div>⏸ HITL N3 requis</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#22c55e; border-radius:50%"></div>Webhook reprise</div>
+  </div>
+
+</div>
+</body>
+</html>
