@@ -4,13 +4,13 @@
 
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License](https://img.shields.io/badge/license-Apache%202.0-green)
-![Status](https://img.shields.io/badge/status-pre--release-orange)
+![Status](https://img.shields.io/badge/status-Public%20--%20Preprint%20submitted%20to%20arXiv-blue)
 
 ---
 
 ## Overview
 
-AccountingAgents is a novel multi-agent Large Language Model (LLM) framework inspired by the organizational structure of professional accounting firms. Drawing a direct parallel to [TradingAgents](https://arxiv.org/abs/2412.20138) in financial trading, it defines specialized agent roles — Ingestion, Reconciliation, Reporting, Compliance, Accounts Receivable (AR), Accounts Payable (AP), and Onboarding — coordinated by a central Supervisor via a structured `SharedState`. Unlike existing commercial solutions (Intuit Assist, Pilot AI) that operate as closed, monolithic systems, AccountingAgents is open, composable, and MCP-native, leveraging official Model Context Protocol servers as representative integrations. A key contribution is the design of an asynchronous Human-in-the-Loop (HITL) mechanism that suspends agent threads via LangGraph's `interrupt()` primitive, notifies the supervising accountant by email or instant message, and resumes execution upon webhook-delivered approval — enabling mobile, real-world oversight without a dedicated console.
+AccountingAgents is a novel multi-agent Large Language Model (LLM) framework inspired by the organizational structure of professional accounting firms. The paper is publicly available as a preprint submitted to arXiv (April 2026). Drawing a direct parallel to [TradingAgents](https://arxiv.org/abs/2412.20138) in financial trading, it defines specialized agent roles — Ingestion, Reconciliation, Reporting, Compliance, Accounts Receivable (AR), Accounts Payable (AP), and Onboarding — coordinated by a central Supervisor via a structured `SharedState`. Unlike existing commercial solutions (Intuit Assist, Pilot AI) that operate as closed, monolithic systems, AccountingAgents is MCP-native and open source (Apache 2.0), leveraging official Model Context Protocol servers as representative integrations. A key contribution is the design of an asynchronous Human-in-the-Loop (HITL) mechanism that suspends agent threads via LangGraph's `interrupt()` primitive, notifies the supervising accountant by email or instant message, and resumes execution upon webhook-delivered approval — enabling mobile, real-world oversight without a dedicated console.
 
 ---
 
@@ -21,6 +21,16 @@ AccountingAgents is a novel multi-agent Large Language Model (LLM) framework ins
 - **Asynchronous HITL mechanism** — LangGraph `interrupt()` + webhook resumption enables mobile approval from any device, with a 4-hour timeout and automatic escalation
 - **Four-level escalation model** — Risk-calibrated routing from fully automated (N1) to human transfer (N4), aligned with accounting fiduciary obligations
 - **Open-source** — Apache 2.0 licensed; targets small-to-medium accounting firms underserved by enterprise solutions
+
+---
+
+## Related Work
+
+AccountingAgents builds on and extends the following works:
+
+- TradingAgents (Xiao et al., 2025) — arXiv:2412.20138
+- Ramachandran (2025) — Enterprise Finance & Accounting Automation, ResearchGate
+- Barrak (2025) — Traceability and Accountability in Multi-Agent LLM Pipelines, arXiv:2510.07614
 
 ---
 
@@ -76,10 +86,13 @@ Additional MCP servers can be substituted or added without modifying agent logic
 
 ```
 accounting-agents/
-├── paper/       # Academic preprint
-├── docs/        # Architecture diagrams (macro flowchart, LangGraph HITL flow)
-├── src/         # Implementation (coming soon)
-└── README.md
+├── paper/accounting_agents_paper.pdf    # Preprint (April 2026)
+├── docs/flowchart-macro.html            # Macro architecture diagram
+├── docs/langgraph-hitl-gmail.html       # LangGraph HITL flow diagram
+├── src/                                 # MVP implementation (coming soon)
+├── README.md
+├── LICENSE                              # Apache 2.0
+└── .gitignore
 ```
 
 ---
@@ -100,7 +113,8 @@ accounting-agents/
   title={AccountingAgents: A Multi-Agent LLM Framework for Accounting Firm Automation},
   author={Desrochers, Paul},
   year={2026},
-  note={Preprint}
+  month={April},
+  note={Preprint. GitHub: https://github.com/pdesrochers01/accounting-agents}
 }
 ```
 
@@ -110,6 +124,7 @@ accounting-agents/
 
 Paul Desrochers — Independent Researcher, Quebec, Canada
 pdesrochers.ai.research@gmail.com
+https://cv.paul-desrochers.com
 
 ---
 
