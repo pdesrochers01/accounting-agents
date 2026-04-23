@@ -181,7 +181,6 @@ PYTHONPATH=. .venv/bin/python scripts/demo_hitl.py
 - [ ] Compliance Agent + Onboarding Agent (Phase 4)
 - [ ] Experimental validation paper (agent accuracy, HITL approval rates)
 - [ ] Support for Xero, Sage, Microsoft Dynamics 365
-- [ ] Canadian regulatory rules (GST/HST, Revenu Québec)
 
 ---
 
