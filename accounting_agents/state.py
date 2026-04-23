@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional, Literal
+from typing import TypedDict, Optional, Literal, Any
 from datetime import datetime
 
 
@@ -60,6 +60,13 @@ class ReconciliationGap(TypedDict):
 
 class AccountingAgentsState(TypedDict):
 
+    # ── Input document (UC01) ─────────────────────────────────────
+    input_document: Optional[dict]
+    # Raw incoming document injected before graph.invoke().
+    # Written by: test harness (MVP) / Gmail MCP (Phase 2)
+    # Read by: Ingestion Agent
+    # Fields: raw_text, source_email_id, filename
+
     # ── Ingestion (UC01) ──────────────────────────────────────────
     documents_ingested: list[IngestedDocument]
     # Documents processed in this cycle.
@@ -116,6 +123,7 @@ class AccountingAgentsState(TypedDict):
 def initial_state(thread_id: str) -> AccountingAgentsState:
     """Return a clean initial state for a new cycle."""
     return AccountingAgentsState(
+        input_document=None,
         documents_ingested=[],
         routing_signal=None,
         reconciliation_gaps=[],

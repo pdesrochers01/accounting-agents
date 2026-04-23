@@ -4,3 +4,4 @@ __pycache__/
 .env
 .venv/
 *.db
+hitl_emails/*.json

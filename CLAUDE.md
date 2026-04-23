@@ -78,13 +78,42 @@ python-dotenv>=1.0.0
 ## Current Session Progress
 ✅ docs/use-cases/ — UC01, UC02, UC03 (English)
 ✅ accounting_agents/__init__.py
-✅ accounting_agents/state.py — SharedState validated
+✅ accounting_agents/state.py — input_document field added
 ✅ .venv + requirements.txt — venv OK (+ langgraph-checkpoint-sqlite)
 ✅ .gitignore
 ✅ accounting_agents/routing.py — 10/10 tests passed
 ✅ accounting_agents/nodes/__init__.py
-✅ accounting_agents/nodes/ingestion.py — stub
-✅ accounting_agents/nodes/reconciliation.py — stub
-✅ accounting_agents/nodes/hitl.py — stub
+✅ accounting_agents/nodes/ingestion.py — real, 9/9 tests passed
+✅ accounting_agents/nodes/reconciliation.py — real, 2/2 tests passed
+✅ accounting_agents/nodes/hitl.py — real, full cycle tested
 ✅ accounting_agents/graph.py — 5 nodes compiled and validated
-⬜ accounting_agents/webhook.py
+✅ accounting_agents/webhook.py — port 5001, host 0.0.0.0
+✅ tests/test_end_to_end_stubs.py — passed
+✅ tests/fixtures/ — 3 scenarios validated
+✅ tests/test_reconciliation.py — 2/2 passed
+✅ tests/test_hitl.py — full cycle passed
+✅ tests/test_ingestion.py — 9/9 passed
+✅ tests/test_end_to_end_real.py — 3/3 passed
+✅ scripts/demo_hitl.py — live HITL demo validated on iPhone
+✅ hitl_emails/ — mock email output
+✅ .env + .env.example — HITL_MODE=mock, port 5001
+✅ ngrok 3.38.0 — tunnel active on port 5001
+⬜ Phase 2 — Gmail MCP + QBO MCP real integration
+⬜ Phase 2 — Ingestion Agent LLM classification
+⬜ Phase 2 — AR Agent + AP Agent
+
+## MVP Status
+🎉 COMPLETE — Full HITL cycle validated on mobile (iPhone)
+   thread_id: de147f32-d16c-4ec8-9775-0ec9f60e3f41
+   decision: approve
+   timestamp: 2026-04-23T20:06:40
+
+## Known Fixes
+- sqlite3.connect() requires check_same_thread=False everywhere
+- Amount regex: decimal mandatory (\.\d{2}) to avoid matching
+  integers in document numbers (e.g. INV-4524)
+- "modify" HITL path: reconciliation_node checks hitl_comment →
+  returns "completed" immediately (prevents infinite loop)
+- macOS port 5000 conflict with AirPlay Receiver → use port 5001
+- Flask requires host='0.0.0.0' for ngrok tunnel to reach it
+- ngrok browser warning on free plan → click "Visit Site" once
