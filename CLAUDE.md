@@ -91,16 +91,23 @@ python-dotenv>=1.0.0
 ✅ tests/test_end_to_end_stubs.py — passed
 ✅ tests/fixtures/ — 3 scenarios validated
 ✅ tests/test_reconciliation.py — 2/2 passed
-✅ tests/test_hitl.py — full cycle passed
+✅ tests/test_hitl.py — full HITL cycle passed
 ✅ tests/test_ingestion.py — 9/9 passed
 ✅ tests/test_end_to_end_real.py — 3/3 passed
 ✅ scripts/demo_hitl.py — live HITL demo validated on iPhone
 ✅ hitl_emails/ — mock email output
 ✅ .env + .env.example — HITL_MODE=mock, port 5001
-✅ ngrok 3.38.0 — tunnel active on port 5001
-⬜ Phase 2 — Gmail MCP + QBO MCP real integration
-⬜ Phase 2 — Ingestion Agent LLM classification
-⬜ Phase 2 — AR Agent + AP Agent
+✅ ngrok 3.38.0 — tunnel validated on port 5001
+✅ README.md — updated (MVP status, Quick Start, Roadmap)
+✅ docs/architecture.md — 122 lines
+✅ docs/development-setup.md — 121 lines
+
+## Phase 2 — Next Steps
+⬜ Gmail MCP real integration
+⬜ QBO MCP real integration
+⬜ FastAPI webhook + Pydantic validation
+⬜ LLM-based document classification (Ingestion Agent)
+⬜ AR Agent + AP Agent + Reporting Agent
 
 ## MVP Status
 🎉 COMPLETE — Full HITL cycle validated on mobile (iPhone)
