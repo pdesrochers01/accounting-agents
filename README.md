@@ -45,7 +45,7 @@ AccountingAgents comprises seven specialized agents organized in a hierarchical 
 | III. Reporting | Reporting Agent · Compliance Agent | Generate P&L, cash flow; monitor fiscal deadlines | QBO MCP · Gmail MCP · Calendar MCP |
 | IV. AR / AP / Client | AR Agent · AP Agent · Onboarding Agent | Track overdue invoices; approve vendor bills & payments; create client profiles | QBO MCP · Gmail MCP · Calendar MCP |
 | V. Supervisor | Supervisor · Decision Router | Orchestrate state, routing, and error handling | LangGraph StateGraph · checkpointer |
-| VI. HITL | HITL Notifier · Webhook Resumption | Async approval via messaging; resume suspended thread | Gmail MCP · FastAPI · SqliteSaver |
+| VI. HITL | HITL Notifier · Webhook Resumption | Async approval via messaging; resume suspended thread | Gmail MCP · Flask · SqliteSaver |
 
 *Table 1: AccountingAgents role definitions.*
 
@@ -86,22 +86,101 @@ Additional MCP servers can be substituted or added without modifying agent logic
 
 ```
 accounting-agents/
-├── paper/accounting_agents_paper.pdf    # Preprint (April 2026)
-├── docs/flowchart-macro.html            # Macro architecture diagram
-├── docs/langgraph-hitl-gmail.html       # LangGraph HITL flow diagram
-├── src/                                 # MVP implementation (coming soon)
-├── README.md
-├── LICENSE                              # Apache 2.0
-└── .gitignore
+├── accounting_agents/
+│   ├── __init__.py
+│   ├── state.py              # SharedState TypedDict
+│   ├── graph.py              # LangGraph StateGraph
+│   ├── routing.py            # Conditional routing functions
+│   ├── webhook.py            # Flask HITL webhook (port 5001)
+│   └── nodes/
+│       ├── ingestion.py      # Ingestion Agent (keyword classification)
+│       ├── reconciliation.py # Reconciliation Agent (gap detection)
+│       └── hitl.py           # HITL node — interrupt() + notification
+├── docs/
+│   ├── use-cases/            # UC01, UC02, UC03
+│   ├── flowchart-macro.html  # Macro architecture diagram
+│   └── langgraph-hitl-gmail.html # LangGraph HITL flow diagram
+├── tests/
+│   ├── fixtures/             # Fictional Quebec firm test data (CAD)
+│   ├── test_ingestion.py     # 9/9 tests
+│   ├── test_reconciliation.py # 2/2 tests
+│   ├── test_hitl.py          # Full HITL cycle
+│   └── test_end_to_end_real.py # 3/3 end-to-end tests
+├── scripts/
+│   └── demo_hitl.py          # Live HITL demo script
+├── hitl_emails/              # Mock email output (dev)
+├── paper/
+│   └── accounting_agents_paper.pdf  # Preprint (April 2026)
+├── requirements.txt
+├── .env.example
+├── CLAUDE.md                 # Claude Code persistent context
+└── README.md
+```
+
+---
+
+## Quick Start
+
+**Prerequisites**
+- Python 3.11+
+- [ngrok](https://ngrok.com) (free account)
+- macOS / Linux
+
+**Installation**
+
+```bash
+# Clone
+git clone https://github.com/pdesrochers01/accounting-agents.git
+cd accounting-agents
+
+# Virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Dependencies
+pip install -r requirements.txt
+
+# Environment
+cp .env.example .env
+# Edit .env — set HITL_NOTIFY_EMAIL and HITL_WEBHOOK_BASE_URL
+```
+
+**Run tests**
+
+```bash
+PYTHONPATH=. .venv/bin/python tests/test_end_to_end_real.py
+```
+
+**Run HITL demo** (requires ngrok)
+
+```bash
+# Terminal 1 — Flask webhook server
+PYTHONPATH=. python accounting_agents/webhook.py
+
+# Terminal 2 — ngrok tunnel
+ngrok http 5001
+
+# Terminal 3 — demo script
+PYTHONPATH=. .venv/bin/python scripts/demo_hitl.py
+# Open the APPROVE link from any mobile device
 ```
 
 ---
 
 ## Roadmap
 
-- [ ] MVP implementation (LangGraph + MCP)
-- [ ] Experimental validation paper (agent accuracy, HITL approval rates, time savings)
-- [ ] Support for Xero, Sage, and Microsoft Dynamics 365
+- [x] MVP implementation — Supervisor, Ingestion, Reconciliation, async HITL
+- [x] SharedState TypedDict + LangGraph StateGraph
+- [x] Async HITL cycle — interrupt() + Flask webhook + mobile approval
+- [x] Test suite — 14+ tests, 3 end-to-end scenarios
+- [ ] Gmail MCP real integration (Phase 2)
+- [ ] QBO MCP real integration (Phase 2)
+- [ ] FastAPI webhook + Pydantic validation (Phase 2)
+- [ ] LLM-based document classification (Phase 2)
+- [ ] AR Agent + AP Agent + Reporting Agent (Phase 3)
+- [ ] Compliance Agent + Onboarding Agent (Phase 4)
+- [ ] Experimental validation paper (agent accuracy, HITL approval rates)
+- [ ] Support for Xero, Sage, Microsoft Dynamics 365
 - [ ] Canadian regulatory rules (GST/HST, Revenu Québec)
 
 ---

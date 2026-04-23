@@ -108,6 +108,14 @@ python-dotenv>=1.0.0
    decision: approve
    timestamp: 2026-04-23T20:06:40
 
+## Design Decisions
+- Webhook: Flask (MVP) → FastAPI migration planned for Phase 2
+  (async native + Pydantic validation + Swagger docs)
+- Classification: keyword matching (MVP) → LLM call planned for Phase 2
+- HITL notification: mock email to hitl_emails/ (MVP) → Gmail MCP Phase 2
+- Diagrams (docs/flowchart-macro.html, docs/langgraph-hitl-gmail.html):
+  represent full Phase 2+ vision, not current MVP state
+
 ## Known Fixes
 - sqlite3.connect() requires check_same_thread=False everywhere
 - Amount regex: decimal mandatory (\.\d{2}) to avoid matching
