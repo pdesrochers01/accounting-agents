@@ -1,7 +1,7 @@
 # Use Cases — Accounting Agents
 
-| UC | Titre | Acteur principal | Statut |
-|----|-------|-----------------|--------|
-| UC01 | Ingestion de document financier | Ingestion Agent | MVP |
-| UC02 | Réconciliation et détection de gap | Reconciliation Agent | MVP |
-| UC03 | Cycle HITL complet | Supervisor + humain | MVP |
+| UC | Title | Main Actor | Status |
+|----|-------|------------|--------|
+| UC01 | Financial Document Ingestion | Ingestion Agent | MVP |
+| UC02 | Reconciliation and Gap Detection | Reconciliation Agent | MVP |
+| UC03 | Full HITL Cycle | Supervisor + human | MVP |
