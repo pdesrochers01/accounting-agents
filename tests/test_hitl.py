@@ -21,21 +21,19 @@ from tests.fixtures.scenarios import scenario_gap_n3
 
 def _build_state_from_scenario(scenario: dict, thread_id: str) -> dict:
     state = initial_state(thread_id)
-    state["documents_ingested"] = [
-        {
-            "document_id": "test-doc-001",
-            "document_type": "bank_statement",
-            "date": "2026-03-31",
-            "amount": 0.0,
-            "currency": "CAD",
-            "vendor_or_client": "Banque Nationale",
-            "document_number": "BNQ-MARCH-2026",
-            "qbo_entry_id": "",
-            "source_email_id": "",
-            "qbo_transactions": scenario["qbo_transactions"],
-            "bank_statement": scenario["bank_statement"],
-        }
-    ]
+    state["input_document"] = {
+        "raw_text": (
+            "Relevé bancaire — Banque Nationale du Canada\n"
+            "Période: Mars 2026\n"
+            "Client: Lafleur & Associés CPA\n"
+            "Solde: $4,152.44 CAD\n"
+            "Date: 2026-03-31"
+        ),
+        "source_email_id": "gmail-bnq-march-2026",
+        "filename": "releve_bnq_mars2026.pdf",
+        "qbo_transactions": scenario["qbo_transactions"],
+        "bank_statement": scenario["bank_statement"],
+    }
     return state
 
 
@@ -75,6 +73,7 @@ def test_hitl_full_cycle_approve():
     )
 
     # Assertions
+    print(f"error_log after Phase B: {result_b.get('error_log')}")
     assert result_b.get("hitl_decision") == "approve", \
         f"Expected approve, got {result_b.get('hitl_decision')}"
     assert result_b.get("hitl_pending") == False
