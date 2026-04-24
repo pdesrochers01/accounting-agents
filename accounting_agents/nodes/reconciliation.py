@@ -182,16 +182,19 @@ def _compare_with_bank_statement(
     """
     Convert MCP bill format to the transaction format expected by
     _match_transactions(), then run the existing matching logic.
+    Only CAD bills are compared — non-CAD transactions belong to separate
+    foreign-currency accounts and must not pollute a CAD bank reconciliation.
     """
+    cad_bills = [b for b in qbo_bills if b.get("currency") == "CAD"]
     qbo_transactions = [
         {
-            "transaction_id":  bill["qbo_bill_id"],
-            "date":            bill["date"],
+            "transaction_id":   bill["qbo_bill_id"],
+            "date":             bill["date"],
             "vendor_or_client": bill["vendor_name"],
-            "amount":          bill["amount"],
-            "document_number": bill["qbo_bill_id"],
+            "amount":           bill["amount"],
+            "document_number":  bill["qbo_bill_id"],
         }
-        for bill in qbo_bills
+        for bill in cad_bills
     ]
     return _match_transactions(qbo_transactions, bank_statement)
 
