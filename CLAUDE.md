@@ -122,6 +122,12 @@ python-dotenv>=1.0.0
 - HITL notification: mock email to hitl_emails/ (MVP) → Gmail MCP Phase 2
 - Diagrams (docs/flowchart-macro.html, docs/langgraph-hitl-gmail.html):
   represent full Phase 2+ vision, not current MVP state
+- Supervisor pattern: currently implemented as pure Python routing
+  functions (route_after_ingestion, route_after_reconciliation,
+  route_after_hitl) — deterministic, zero LLM calls, sufficient
+  for 3 agents. When adding a 4th agent (Phase 3), migrate to a
+  real LangGraph Supervisor node with LLM call — the routing logic
+  will be too complex for hardcoded rules.
 
 ## Known Fixes
 - sqlite3.connect() requires check_same_thread=False everywhere
@@ -132,3 +138,29 @@ python-dotenv>=1.0.0
 - macOS port 5000 conflict with AirPlay Receiver → use port 5001
 - Flask requires host='0.0.0.0' for ngrok tunnel to reach it
 - ngrok browser warning on free plan → click "Visit Site" once
+
+## Phase 2 — Starting Point
+
+Next session should begin with:
+1. Read CLAUDE.md fully before any code change
+2. Run all existing tests to confirm green baseline:
+   PYTHONPATH=. .venv/bin/python tests/test_end_to_end_real.py
+3. First feature to implement: Gmail MCP real integration
+   - Replace HITL_MODE=mock with real Gmail MCP send
+   - accounting_agents/nodes/hitl.py → _send_notification()
+   - Set HITL_MODE=gmail in .env
+   - Gmail MCP server URL: https://gmailmcp.googleapis.com/mcp/v1
+   - Test: send real email with Approve/Modify/Block links
+4. Second feature: QBO MCP real integration
+   - accounting_agents/nodes/reconciliation.py
+   - Replace fixture injection with real QBO MCP queries
+5. Third feature: LLM classification in Ingestion Agent
+   - accounting_agents/nodes/ingestion.py → _classify()
+   - Replace keyword matching with LLM call
+
+## Session Startup Checklist
+- [ ] Read CLAUDE.md
+- [ ] Run existing tests (all green before touching code)
+- [ ] Start Flask: PYTHONPATH=. python accounting_agents/webhook.py
+- [ ] Start ngrok: ngrok http 5001
+- [ ] One feature at a time — analyze here, then prompt Claude Code
