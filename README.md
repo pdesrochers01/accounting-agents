@@ -70,13 +70,13 @@ Accounting operations carry fiduciary and legal obligations that preclude fully 
 
 All tool access is mediated through official MCP servers. The five servers in the MVP stack are:
 
-| MCP Server | Role |
-|---|---|
-| **Gmail MCP** | All email I/O, including HITL notifications and approval links |
-| **QuickBooks Online MCP** | CRUD on Account, Bill, Customer, Invoice, Vendor, and 7 additional entities |
-| **Google Drive MCP** | Financial document storage and retrieval |
-| **Google Calendar MCP** | Fiscal deadline monitoring and scheduling |
-| **Zapier MCP** | General-purpose bridge to services without a native MCP server |
+| MCP Server | Status | Role |
+|---|---|---|
+| **Gmail MCP** | ✅ Active | Real OAuth2 sending via Gmail API; HITL_MODE=gmail; token.json at repo root |
+| **QuickBooks Online MCP** | ✅ Active | Official Intuit MCP server (stdio); QBO_MODE=mcp; sandbox CA validated (139 tools) |
+| **Google Drive MCP** | Planned | Financial document storage and retrieval |
+| **Google Calendar MCP** | Planned | Fiscal deadline monitoring and scheduling |
+| **Zapier MCP** | Planned | General-purpose bridge to services without a native MCP server |
 
 Additional MCP servers can be substituted or added without modifying agent logic.
 
@@ -105,9 +105,13 @@ accounting-agents/
 │   ├── test_ingestion.py     # 9/9 tests
 │   ├── test_reconciliation.py # 2/2 tests
 │   ├── test_hitl.py          # Full HITL cycle
-│   └── test_end_to_end_real.py # 3/3 end-to-end tests
+│   ├── test_end_to_end_real.py # 3/3 end-to-end tests
+│   └── test_qbo_mcp.py       # QBO MCP live integration test (QBO_MODE=mcp)
 ├── scripts/
-│   └── demo_hitl.py          # Live HITL demo script
+│   ├── demo_hitl.py          # Live HITL demo script
+│   ├── generate_gmail_token.py  # Gmail OAuth2 token generator
+│   ├── generate_qbo_token.py    # QBO OAuth2 token generator
+│   └── seed_qbo_sandbox.py      # Seeds QBO sandbox with test vendors + bills
 ├── hitl_emails/              # Mock email output (dev)
 ├── paper/
 │   └── accounting_agents_paper.pdf  # Preprint (April 2026)
@@ -145,6 +149,15 @@ cp .env.example .env
 # Edit .env — set HITL_NOTIFY_EMAIL and HITL_WEBHOOK_BASE_URL
 ```
 
+**Phase 2 credentials** (required for live MCP paths)
+
+- Gmail OAuth: place `client_secret.json` at repo root, then run
+  `PYTHONPATH=. .venv/bin/python scripts/generate_gmail_token.py`
+  to generate `token.json`. Set `HITL_MODE=gmail` in `.env`.
+- QBO MCP: run `scripts/generate_qbo_token.py` to generate
+  `qbo_token.json`. Set `QBO_MODE=mcp` and `QBO_MCP_SERVER_PATH`
+  in `.env`. Both credential files are excluded from git.
+
 **Run tests**
 
 ```bash
@@ -173,8 +186,8 @@ PYTHONPATH=. .venv/bin/python scripts/demo_hitl.py
 - [x] SharedState TypedDict + LangGraph StateGraph
 - [x] Async HITL cycle — interrupt() + Flask webhook + mobile approval
 - [x] Test suite — 14+ tests, 3 end-to-end scenarios
-- [ ] Gmail MCP real integration (Phase 2)
-- [ ] QBO MCP real integration (Phase 2)
+- [x] Gmail MCP real integration (Phase 2)
+- [x] QBO MCP real integration (Phase 2)
 - [ ] FastAPI webhook + Pydantic validation (Phase 2)
 - [ ] LLM-based document classification (Phase 2)
 - [ ] AR Agent + AP Agent + Reporting Agent (Phase 3)
