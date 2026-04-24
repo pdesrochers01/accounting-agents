@@ -3,6 +3,9 @@ Unit tests for the real Reconciliation Agent node.
 Uses fixture scenarios — no MCP, no LangGraph graph execution.
 """
 
+import os
+os.environ["QBO_MODE"] = "mock"
+
 from accounting_agents.nodes.reconciliation import reconciliation_node
 from accounting_agents.state import initial_state
 from tests.fixtures.scenarios import scenario_clean, scenario_gap_n3

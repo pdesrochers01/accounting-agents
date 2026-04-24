@@ -12,6 +12,7 @@ import uuid
 os.environ["HITL_MODE"] = "mock"
 os.environ["HITL_WEBHOOK_BASE_URL"] = "http://localhost:5000"
 os.environ["HITL_NOTIFY_EMAIL"] = "test@lafleur-cpa.example.com"
+os.environ["QBO_MODE"] = "mock"
 
 from langgraph.checkpoint.sqlite import SqliteSaver
 from accounting_agents.graph import build_graph

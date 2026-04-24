@@ -11,3 +11,7 @@ flask>=3.0.0
 
 # Utilities
 python-dotenv>=1.0.0
+
+# Gmail OAuth (Phase 2)
+google-auth-oauthlib>=1.0.0
+google-api-python-client>=2.0.0

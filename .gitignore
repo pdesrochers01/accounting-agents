@@ -8,3 +8,6 @@ __pycache__/
 *.db-wal
 hitl_emails/*.json
 client_secret.json
+token.json
+qbo_token.json
+qbo_seed_ids.json

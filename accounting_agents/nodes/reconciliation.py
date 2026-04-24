@@ -1,5 +1,5 @@
 """
-Reconciliation Agent node — real implementation.
+Reconciliation Agent node — Phase 2 real implementation.
 
 Matching logic:
 - Match on vendor_or_client (exact) + date (±3 days) + amount (exact)
@@ -8,11 +8,23 @@ Matching logic:
 - abs(gap) > 2000   → N3 (HITL required)
 - 500 <= gap <= 2000 → N2 (notify only, out of MVP scope → treated as N1)
 - Unmatched transaction → N3 if amount > 2000, else N1
+
+QBO_MODE=mock : uses qbo_transactions + bank_statement injected via input_document
+QBO_MODE=mcp  : fetches real bills from QBO sandbox via Intuit MCP stdio server
+                 bank_statement still injected via input_document (Phase 2)
 """
 
+import asyncio
+import json
+import os
 import uuid
 from datetime import datetime, timedelta
+
+from dotenv import load_dotenv
+
 from accounting_agents.state import AccountingAgentsState, ReconciliationGap
+
+load_dotenv()
 
 
 # --- Thresholds ---
@@ -100,13 +112,100 @@ def _match_transactions(
     return gaps
 
 
+# ── QBO MCP integration (Phase 2) ───────────────────────────────
+
+async def _fetch_qbo_bills_mcp() -> list[dict]:
+    """
+    Fetch all open bills from QBO sandbox via the Intuit MCP stdio server.
+    Returns a list of dicts: {vendor_name, amount, currency, qbo_bill_id, date}
+    """
+    from mcp.client.stdio import stdio_client, StdioServerParameters
+    from mcp import ClientSession
+
+    mcp_path = os.getenv("QBO_MCP_SERVER_PATH", "")
+    if not mcp_path:
+        raise RuntimeError("QBO_MCP_SERVER_PATH not set in environment")
+
+    token_file = os.getenv("QBO_TOKEN_FILE", "qbo_token.json")
+    with open(token_file) as f:
+        token = json.load(f)
+
+    qbo_env = {
+        "QUICKBOOKS_CLIENT_ID":     os.getenv("QBO_CLIENT_ID", ""),
+        "QUICKBOOKS_CLIENT_SECRET":  os.getenv("QBO_CLIENT_SECRET", ""),
+        "QUICKBOOKS_REALM_ID":       os.getenv("QBO_REALM_ID", ""),
+        "QUICKBOOKS_ENVIRONMENT":    os.getenv("QBO_ENVIRONMENT", "sandbox"),
+        "QUICKBOOKS_REFRESH_TOKEN":  token["refresh_token"],
+    }
+
+    params = StdioServerParameters(command="node", args=[mcp_path], env=qbo_env)
+    bills: list[dict] = []
+
+    async with stdio_client(params) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            result = await session.call_tool(
+                "search_bills", {"params": {"criteria": []}}
+            )
+
+            if result.isError:
+                raise RuntimeError(f"search_bills MCP error: {result.content}")
+
+            for block in result.content:
+                text = getattr(block, "text", "")
+                if not text.startswith("{"):
+                    continue  # skip summary line
+                try:
+                    bill = json.loads(text)
+                    vendor_ref = bill.get("VendorRef", {})
+                    currency_ref = bill.get("CurrencyRef", {})
+                    lines = bill.get("Line", [])
+                    amount = float(lines[0]["Amount"]) if lines else 0.0
+                    bills.append({
+                        "vendor_name": vendor_ref.get("name", "Unknown"),
+                        "amount":      amount,
+                        "currency":    currency_ref.get("value", "CAD"),
+                        "qbo_bill_id": bill["Id"],
+                        "date":        bill.get("TxnDate", ""),
+                    })
+                except (json.JSONDecodeError, KeyError, IndexError):
+                    continue
+
+    print(f"[reconciliation_node] Fetched {len(bills)} bills via QBO MCP")
+    return bills
+
+
+def _compare_with_bank_statement(
+    qbo_bills: list[dict],
+    bank_statement: list[dict],
+) -> list[ReconciliationGap]:
+    """
+    Convert MCP bill format to the transaction format expected by
+    _match_transactions(), then run the existing matching logic.
+    """
+    qbo_transactions = [
+        {
+            "transaction_id":  bill["qbo_bill_id"],
+            "date":            bill["date"],
+            "vendor_or_client": bill["vendor_name"],
+            "amount":          bill["amount"],
+            "document_number": bill["qbo_bill_id"],
+        }
+        for bill in qbo_bills
+    ]
+    return _match_transactions(qbo_transactions, bank_statement)
+
+
+# ── Main node ────────────────────────────────────────────────────
+
 def reconciliation_node(state: AccountingAgentsState) -> dict:
     """
     Real Reconciliation Agent node.
 
-    Reads documents_ingested from SharedState.
-    For MVP: uses bank_statement injected into first document's metadata
-    via the 'bank_statement' key (set by Ingestion Agent or test harness).
+    QBO_MODE=mock: reads qbo_transactions + bank_statement from first
+                   document's injected metadata (fixtures / test harness).
+    QBO_MODE=mcp:  fetches real bills from QBO sandbox via MCP stdio server;
+                   bank_statement still injected via input_document (Phase 2).
     """
     error_log = list(state.get("error_log", []))
 
@@ -121,7 +220,6 @@ def reconciliation_node(state: AccountingAgentsState) -> dict:
             "error_log": error_log,
         }
 
-    # --- Extract data from SharedState ---
     documents_ingested = state.get("documents_ingested", [])
 
     if not documents_ingested:
@@ -131,21 +229,47 @@ def reconciliation_node(state: AccountingAgentsState) -> dict:
             "error_log": error_log,
         }
 
-    # For MVP: bank_statement and qbo_transactions are injected
-    # via the first document's metadata fields
     first_doc = documents_ingested[0]
-    qbo_transactions = first_doc.get("qbo_transactions", [])
     bank_statement = first_doc.get("bank_statement", [])
+    qbo_mode = os.getenv("QBO_MODE", "mock")
 
-    if not qbo_transactions or not bank_statement:
-        return {
-            "routing_signal": "nothing_to_reconcile",
-            "reconciliation_gaps": [],
-            "error_log": error_log,
-        }
+    # --- QBO data source ---
+    if qbo_mode == "mcp":
+        if not bank_statement:
+            return {
+                "routing_signal": "nothing_to_reconcile",
+                "reconciliation_gaps": [],
+                "error_log": error_log,
+            }
+        try:
+            qbo_bills = asyncio.run(_fetch_qbo_bills_mcp())
+        except RuntimeError:
+            # asyncio.run() raises RuntimeError if a loop is already running.
+            # Fall back to a fresh loop to handle nested async contexts.
+            loop = asyncio.new_event_loop()
+            try:
+                qbo_bills = loop.run_until_complete(_fetch_qbo_bills_mcp())
+            finally:
+                loop.close()
+        except Exception as exc:
+            error_log.append(f"[reconciliation_node] MCP fetch failed: {exc}")
+            return {
+                "routing_signal": "nothing_to_reconcile",
+                "reconciliation_gaps": [],
+                "error_log": error_log,
+            }
+        gaps = _compare_with_bank_statement(qbo_bills, bank_statement)
 
-    # --- Run matching ---
-    gaps = _match_transactions(qbo_transactions, bank_statement)
+    else:
+        # Mock mode: fixture injection via first document's metadata
+        qbo_transactions = first_doc.get("qbo_transactions", [])
+        if not qbo_transactions or not bank_statement:
+            return {
+                "routing_signal": "nothing_to_reconcile",
+                "reconciliation_gaps": [],
+                "error_log": error_log,
+            }
+        gaps = _match_transactions(qbo_transactions, bank_statement)
 
     # --- Determine routing ---
     n3_gaps = [g for g in gaps if g["escalation_level"] == "N3"]

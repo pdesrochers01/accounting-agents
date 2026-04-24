@@ -9,7 +9,7 @@ Flow:
 """
 
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, request, jsonify
 from langgraph.checkpoint.sqlite import SqliteSaver
 from accounting_agents.graph import build_graph
@@ -31,7 +31,7 @@ def get_graph():
 @app.route("/health", methods=["GET"])
 def health():
     """Health check endpoint."""
-    return jsonify({"status": "ok", "timestamp": datetime.utcnow().isoformat()})
+    return jsonify({"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()})
 
 
 @app.route("/webhook", methods=["GET"])
@@ -78,7 +78,7 @@ def webhook():
             "status": "resumed",
             "thread_id": thread_id,
             "decision": decision,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         })
 
     except Exception as e:

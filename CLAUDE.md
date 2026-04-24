@@ -101,10 +101,22 @@ python-dotenv>=1.0.0
 ✅ README.md — updated (MVP status, Quick Start, Roadmap)
 ✅ docs/architecture.md — 122 lines
 ✅ docs/development-setup.md — 121 lines
+✅ Gmail OAuth setup — client_secret.json + token.json
+✅ accounting_agents/nodes/hitl.py → _send_gmail() — HITL_MODE=gmail
+✅ Live HITL demo validated on iPhone with real Gmail
+   thread_id: 8621f58c-ed18-49a5-9668-da8d8a7ba8b0
+   decisions tested: approve, modify, block
+   timestamp: 2026-04-24T09:50:57
+✅ QBO sandbox CA created (realm_id: 9341456939673043)
+✅ scripts/seed_qbo_sandbox.py — 4 vendors + 4 bills seeded (CAD)
+✅ intuit/quickbooks-online-mcp-server installed (139 tools, stdio)
+✅ reconciliation.py → _fetch_qbo_bills_mcp() — MCP-native via stdio_client
+✅ tests/test_qbo_mcp.py — 1/1 passed, 8 bills live from QBO sandbox
+✅ QBO_MODE=mcp validated — Hydro-Québec $2,450.00 CAD confirmed
 
 ## Phase 2 — Next Steps
-⬜ Gmail MCP real integration
-⬜ QBO MCP real integration
+✅ Gmail MCP real integration
+✅ QBO MCP real integration
 ⬜ FastAPI webhook + Pydantic validation
 ⬜ LLM-based document classification (Ingestion Agent)
 ⬜ AR Agent + AP Agent + Reporting Agent
@@ -128,6 +140,10 @@ python-dotenv>=1.0.0
   for 3 agents. When adding a 4th agent (Phase 3), migrate to a
   real LangGraph Supervisor node with LLM call — the routing logic
   will be too complex for hardcoded rules.
+- QBO MCP: uses official Intuit MCP server (stdio transport) via
+  Python mcp stdio_client. Path configured via QBO_MCP_SERVER_PATH
+  in .env for portability. QBO_MODE=mcp activates live path,
+  QBO_MODE=mock preserves fixture-based tests.
 
 ## Known Fixes
 - sqlite3.connect() requires check_same_thread=False everywhere
@@ -145,16 +161,12 @@ Next session should begin with:
 1. Read CLAUDE.md fully before any code change
 2. Run all existing tests to confirm green baseline:
    PYTHONPATH=. .venv/bin/python tests/test_end_to_end_real.py
-3. First feature to implement: Gmail MCP real integration
-   - Replace HITL_MODE=mock with real Gmail MCP send
-   - accounting_agents/nodes/hitl.py → _send_notification()
-   - Set HITL_MODE=gmail in .env
-   - Gmail MCP server URL: https://gmailmcp.googleapis.com/mcp/v1
-   - Test: send real email with Approve/Modify/Block links
-4. Second feature: QBO MCP real integration
-   - accounting_agents/nodes/reconciliation.py
-   - Replace fixture injection with real QBO MCP queries
-5. Third feature: LLM classification in Ingestion Agent
+3. First feature to implement: FastAPI webhook + Pydantic validation
+   - Replace Flask webhook (accounting_agents/webhook.py)
+   - FastAPI + Pydantic v2 validation
+   - Keep same routes: GET /webhook, GET /health
+   - Keep same HITL logic unchanged
+4. Second feature: LLM classification in Ingestion Agent
    - accounting_agents/nodes/ingestion.py → _classify()
    - Replace keyword matching with LLM call
 

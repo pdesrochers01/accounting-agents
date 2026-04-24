@@ -17,10 +17,13 @@ Two-phase execution within a single LangGraph node:
 Detection: if hitl_decision is not None → we are in Phase B.
 """
 
+import base64
 import json
 import os
 import uuid
 from datetime import datetime, timedelta, timezone
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from dotenv import load_dotenv
 from langgraph.types import interrupt
@@ -105,14 +108,76 @@ def _send_mock(email: dict) -> None:
     print(f"{'=' * 60}\n")
 
 
+def _send_gmail(email: dict) -> None:
+    """Send HITL notification via Gmail API using stored OAuth credentials."""
+    from google.auth.transport.requests import Request
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+
+    token_file = os.getenv("GMAIL_TOKEN_FILE", "token.json")
+    secret_file = os.getenv("GMAIL_CLIENT_SECRET_FILE", "client_secret.json")
+    scopes = ["https://www.googleapis.com/auth/gmail.send"]
+
+    creds = Credentials.from_authorized_user_file(token_file, scopes)
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+        with open(token_file, "w") as f:
+            f.write(creds.to_json())
+
+    gap = email["gap"]
+    thread_id = email["thread_id"]
+    subject = f"[HITL] Reconciliation gap requires approval — {thread_id}"
+
+    base_url = HITL_WEBHOOK_BASE_URL.rstrip("/")
+
+    def action_url(decision: str) -> str:
+        return f"{base_url}/webhook?thread_id={thread_id}&decision={decision}"
+
+    html_body = f"""
+<html><body>
+<h2>AccountingAgents — Human Approval Required</h2>
+<table>
+  <tr><td><b>Vendor</b></td><td>{gap['vendor_or_client']}</td></tr>
+  <tr><td><b>Expected</b></td><td>${gap['expected_amount']:,.2f} CAD</td></tr>
+  <tr><td><b>Actual</b></td><td>${gap['actual_amount']:,.2f} CAD</td></tr>
+  <tr><td><b>Gap</b></td><td>${abs(gap['delta']):,.2f} CAD ({gap['escalation_level']} — approval required)</td></tr>
+  <tr><td><b>Date expected</b></td><td>{gap['date_expected']}</td></tr>
+  <tr><td><b>Date actual</b></td><td>{gap['date_actual'] or 'not found'}</td></tr>
+</table>
+<br>
+<p><b>ACTION REQUIRED — click one link below:</b></p>
+<p>
+  <a href="{action_url('approve')}">✅ APPROVE</a> &nbsp;|&nbsp;
+  <a href="{action_url('modify')}">✏️ MODIFY</a> &nbsp;|&nbsp;
+  <a href="{action_url('block')}">🚫 BLOCK</a>
+</p>
+<p>This request expires in {HITL_TIMEOUT_HOURS} hours.<br>Thread ID: {thread_id}</p>
+</body></html>
+"""
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = subject
+    msg["From"] = f"me"
+    msg["To"] = email["to"]
+    msg.attach(MIMEText(html_body, "html"))
+
+    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
+
+    service = build("gmail", "v1", credentials=creds)
+    service.users().messages().send(userId="me", body={"raw": raw}).execute()
+
+    print(f"[hitl_node] Gmail sent to {email['to']} (thread {thread_id[:8]})")
+
+
 def _send_notification(email: dict) -> None:
-    """Dispatch notification — mock or Gmail MCP."""
+    """Dispatch notification — mock or Gmail API."""
     if HITL_MODE == "mock":
         _send_mock(email)
+    elif HITL_MODE == "gmail":
+        _send_gmail(email)
     else:
-        # Gmail MCP integration — Phase 2
         raise NotImplementedError(
-            "Gmail MCP not yet configured. Set HITL_MODE=mock in .env"
+            f"Unknown HITL_MODE={HITL_MODE!r}. Use 'mock' or 'gmail'."
         )
 
 
@@ -165,7 +230,10 @@ def hitl_node(state: AccountingAgentsState) -> dict:
 
     # Build and send notification
     email = _build_email(thread_id, primary_gap)
-    _send_notification(email)
+    try:
+        _send_notification(email)
+    except Exception as exc:
+        error_log.append(f"[hitl_node] Notification failed: {exc}")
 
     # Set timeout
     timeout_at = datetime.now(timezone.utc) + timedelta(hours=HITL_TIMEOUT_HOURS)
