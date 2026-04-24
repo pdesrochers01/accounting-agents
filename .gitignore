@@ -8,3 +8,4 @@ __pycache__/
 *.db-wal
 hitl_emails/*.json
 client_secret.json
+client_secret.json
