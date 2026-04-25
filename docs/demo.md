@@ -151,6 +151,58 @@ After `graph.update_state()` injects the `hitl_decision`, the graph resumes from
 
 ---
 
+## Security & Data Privacy
+
+Data confidentiality is a critical non-functional requirement
+for any CPA firm. AccountingAgents addresses this at every layer:
+
+### Data in Transit
+- All QBO API calls use OAuth 2.0 with short-lived access tokens
+- Gmail notifications use OAuth 2.0 — no passwords stored
+- ngrok tunnel uses HTTPS end-to-end
+
+### Data at Rest
+- LangGraph thread state persisted in local SQLite
+  (never leaves the firm's infrastructure)
+- OAuth tokens stored locally (token.json, qbo_token.json)
+  excluded from version control (.gitignore)
+- No client financial data sent to third-party services
+  beyond QBO and Gmail (already trusted by the firm)
+
+### Document Ingestion & Email Privacy
+- Current demo: no client email is read by the agent —
+  document ingestion is simulated (input_document injected
+  directly into the graph)
+- Gmail OAuth2 scope is limited to `gmail.send` only —
+  the agent can send notifications but cannot read the
+  firm's inbox
+- Phase 3: Gmail read access will use `gmail.readonly`
+  scope (read-only, no modification possible). The firm's
+  data privacy policy will govern which emails the agent
+  is authorized to process and for how long attachments
+  are retained
+
+### Human Oversight & Audit Trail
+- N1/N2/N3/N4 escalation model ensures no high-value action
+  is taken without explicit human approval
+- Full audit trail via LangGraph checkpointer —
+  every decision is timestamped and traceable
+- HITL decisions include decision maker identity,
+  timestamp (UTC), and thread ID
+
+### Talking Point for Presenter
+> "Client financial data never leaves your infrastructure.
+>  The agents orchestrate the workflow — they don't store
+>  your clients' data."
+>
+> "Today, no client email is read by the agent — document
+>  ingestion is simulated. In Phase 3, we will implement
+>  Gmail read access with the minimum required scope, and
+>  the firm's data privacy policy will govern which emails
+>  the agent is authorized to process."
+
+---
+
 ## Phase 2 — Next Steps (for investor discussion)
 
 | Feature | Description | Status |
