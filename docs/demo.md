@@ -7,7 +7,7 @@
 | **Firm** | Lafleur CPA Firm, Montreal |
 | **Client** | Entreprises Beaumont Inc. |
 | **Task** | Bank reconciliation March 2026 |
-| **Persona** | Marie Cardin, Senior Partner |
+| **Persona** | Marie Lafleur, Senior Partner |
 
 ---
 
