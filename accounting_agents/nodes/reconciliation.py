@@ -138,7 +138,7 @@ async def _fetch_qbo_bills_mcp() -> list[dict]:
         "QUICKBOOKS_REFRESH_TOKEN":  token["refresh_token"],
     }
 
-    params = StdioServerParameters(command="node", args=[mcp_path], env=qbo_env)
+    params = StdioServerParameters(command="node", args=[mcp_path], env={**qbo_env, "NODE_NO_WARNINGS": "1"})
     bills: list[dict] = []
 
     async with stdio_client(params) as (read, write):

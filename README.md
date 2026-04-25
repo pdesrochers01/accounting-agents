@@ -108,7 +108,7 @@ accounting-agents/
 │   ├── test_end_to_end_real.py # 3/3 end-to-end tests
 │   └── test_qbo_mcp.py       # QBO MCP live integration test (QBO_MODE=mcp)
 ├── scripts/
-│   ├── demo_hitl.py          # Live HITL demo script
+│   ├── demo_end_to_end.py    # End-to-end narrative demo (Phase 2)
 │   ├── generate_gmail_token.py  # Gmail OAuth2 token generator
 │   ├── generate_qbo_token.py    # QBO OAuth2 token generator
 │   └── seed_qbo_sandbox.py      # Seeds QBO sandbox with test vendors + bills
@@ -177,6 +177,16 @@ ngrok http 5001
 PYTHONPATH=. .venv/bin/python scripts/demo_hitl.py
 # Open the APPROVE link from any mobile device
 ```
+
+---
+
+## Demo
+
+```bash
+PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py
+```
+
+See [docs/demo.md](docs/demo.md) for the complete demo guide including act-by-act narrative and presenter talking points.
 
 ---
 
