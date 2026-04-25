@@ -1,7 +1,7 @@
 """
 scripts/demo_end_to_end.py — End-to-end narrative demo for AccountingAgents Phase 2.
 
-Tells the full story of Marie Lafleur CPA processing a bank reconciliation
+Tells the full story of Marie Lafleur processing a bank reconciliation
 for Entreprises Beaumont Inc., from email detection to HITL decision on iPhone.
 
 Usage:
@@ -48,7 +48,7 @@ console = Console()
 CABINET = "Lafleur CPA Firm"
 CLIENT = "Entreprises Beaumont Inc."
 TASK = "Bank Reconciliation March 2026"
-ANALYST = "Marie Lafleur, CPA"
+ANALYST = "Marie Lafleur"
 FLASK_URL = "http://localhost:5001"
 # Same DB as webhook.py so polling sees webhook updates
 DB_PATH = "accounting_agents.db"
@@ -90,7 +90,7 @@ RAW_TEXT = (
     "Bank Statement — National Bank of Canada\n"
     "Period: March 2026\n"
     "Client: Entreprises Beaumont Inc.\n"
-    "Accountant: Marie Lafleur CPA\n"
+    "Accountant: Marie Lafleur\n"
     "Balance: $4,152.44 CAD\n"
     "Date: 2026-03-31"
 )
