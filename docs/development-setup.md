@@ -62,7 +62,7 @@ On macOS, remove Gatekeeper quarantine if needed:
 xattr -d com.apple.quarantine /opt/homebrew/Caskroom/ngrok/3.38.0/ngrok
 ```
 
-### Step 2 — Terminal 1: Flask webhook server
+### Step 2 — Terminal 1: FastAPI webhook server
 
 ```bash
 source .venv/bin/activate

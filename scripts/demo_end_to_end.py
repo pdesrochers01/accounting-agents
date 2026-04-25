@@ -8,7 +8,7 @@ Usage:
     # Dry-run: Acts 1-3 only (no Gmail, no graph)
     PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py --dry-run
 
-    # Full demo (requires Flask on port 5001 + ngrok configured in .env):
+    # Full demo (requires FastAPI server on port 5001 + ngrok configured in .env):
     PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py
 """
 
@@ -49,7 +49,7 @@ CABINET = "Lafleur CPA Firm"
 CLIENT = "Entreprises Beaumont Inc."
 TASK = "Bank Reconciliation March 2026"
 ANALYST = "Marie Lafleur"
-FLASK_URL = "http://localhost:5001"
+WEBHOOK_URL = "http://localhost:5001"
 # Same DB as webhook.py so polling sees webhook updates
 DB_PATH = "accounting_agents.db"
 
@@ -96,9 +96,9 @@ RAW_TEXT = (
 )
 
 
-def _check_flask() -> bool:
+def _check_webhook() -> bool:
     try:
-        with urllib.request.urlopen(f"{FLASK_URL}/health", timeout=2) as resp:
+        with urllib.request.urlopen(f"{WEBHOOK_URL}/health", timeout=2) as resp:
             return resp.status == 200
     except Exception:
         return False
@@ -354,7 +354,7 @@ def act5_wait_decision(
 ) -> None:
     """Poll LangGraph checkpointer directly for HITL decision with a live elapsed timer.
 
-    Reads state from SQLite on every tick — immune to Flask auto-reloader restarts.
+    Reads state from SQLite on every tick — uvicorn eliminates auto-reloader issues.
     Exits as soon as any terminal decision arrives or after MAX_WAIT_SECONDS.
     "modify" is treated as terminal: reconciliation_node short-circuits on hitl_comment
     (CLAUDE.md Known Fixes), so no re-escalation loop occurs.
@@ -386,7 +386,7 @@ def act5_wait_decision(
                 f"  [dim](timeout in {remaining}s)[/dim]"
             ))
 
-            # Read from SQLite checkpointer directly — not from Flask in-memory state
+            # Read from SQLite checkpointer directly — not from FastAPI server in-memory state
             graph_state = graph.get_state(config)
             decision = graph_state.values.get("hitl_decision")
             if decision in TERMINAL_DECISIONS:
@@ -401,7 +401,7 @@ def act5_wait_decision(
         console.print(Panel(
             f"[yellow]No decision received after {MAX_WAIT_SECONDS} seconds.[/yellow]\n\n"
             "Possible causes:\n"
-            "  • Flask server restarted (debug mode) — restart the demo\n"
+            "  • FastAPI server not running — restart the demo\n"
             "  • Gmail notification not received — check inbox\n"
             "  • ngrok URL expired — update HITL_WEBHOOK_BASE_URL in .env\n\n"
             f"[dim]Thread ID: {thread_id}[/dim]",
@@ -459,11 +459,11 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.dry_run:
-        console.print("[dim]Checking Flask (port 5001)...[/dim]", end=" ")
-        if not _check_flask():
+        console.print("[dim]Checking FastAPI webhook (port 5001)...[/dim]", end=" ")
+        if not _check_webhook():
             console.print()
             console.print(Panel(
-                "[red]Error: Flask server not available on port 5001.[/red]\n\n"
+                "[red]Error: FastAPI server not available on port 5001.[/red]\n\n"
                 "Start the webhook server before running the demo:\n"
                 "  [bold]PYTHONPATH=. .venv/bin/python accounting_agents/webhook.py[/bold]\n\n"
                 "Expose via ngrok (URL in .env → HITL_WEBHOOK_BASE_URL):\n"

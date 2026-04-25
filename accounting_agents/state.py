@@ -93,18 +93,18 @@ class AccountingAgentsState(TypedDict):
 
     hitl_decision: Optional[HitlDecision]
     # Decision received via webhook after mobile approval.
-    # Written by: Flask Webhook
+    # Written by: FastAPI Webhook
     # Read by: Supervisor (post-HITL routing)
 
     hitl_comment: Optional[str]
     # Optional accountant comment ("modify" decision only).
-    # Written by: Flask Webhook
+    # Written by: FastAPI Webhook
     # Read by: Reconciliation Agent (re-route with constraint)
 
     thread_id: str
     # LangGraph thread ID — required for post-interrupt() resumption.
     # Written by: Supervisor at initialization
-    # Read by: Flask Webhook, SqliteSaver
+    # Read by: FastAPI Webhook, SqliteSaver
 
     timeout_at: Optional[datetime]
     # HITL expiration timestamp (now + 4h).

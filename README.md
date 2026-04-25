@@ -45,7 +45,7 @@ AccountingAgents comprises seven specialized agents organized in a hierarchical 
 | III. Reporting | Reporting Agent · Compliance Agent | Generate P&L, cash flow; monitor fiscal deadlines | QBO MCP · Gmail MCP · Calendar MCP |
 | IV. AR / AP / Client | AR Agent · AP Agent · Onboarding Agent | Track overdue invoices; approve vendor bills & payments; create client profiles | QBO MCP · Gmail MCP · Calendar MCP |
 | V. Supervisor | Supervisor · Decision Router | Orchestrate state, routing, and error handling | LangGraph StateGraph · checkpointer |
-| VI. HITL | HITL Notifier · Webhook Resumption | Async approval via messaging; resume suspended thread | Gmail MCP · Flask · SqliteSaver |
+| VI. HITL | HITL Notifier · Webhook Resumption | Async approval via messaging; resume suspended thread | Gmail MCP · FastAPI · SqliteSaver |
 
 *Table 1: AccountingAgents role definitions.*
 
@@ -91,7 +91,7 @@ accounting-agents/
 │   ├── state.py              # SharedState TypedDict
 │   ├── graph.py              # LangGraph StateGraph
 │   ├── routing.py            # Conditional routing functions
-│   ├── webhook.py            # Flask HITL webhook (port 5001)
+│   ├── webhook.py            # FastAPI HITL webhook (port 5001)
 │   └── nodes/
 │       ├── ingestion.py      # Ingestion Agent (keyword classification)
 │       ├── reconciliation.py # Reconciliation Agent (gap detection)
@@ -167,7 +167,7 @@ PYTHONPATH=. .venv/bin/python tests/test_end_to_end_real.py
 **Run HITL demo** (requires ngrok)
 
 ```bash
-# Terminal 1 — Flask webhook server
+# Terminal 1 — FastAPI webhook server
 PYTHONPATH=. python accounting_agents/webhook.py
 
 # Terminal 2 — ngrok tunnel
@@ -194,7 +194,7 @@ See [docs/demo.md](docs/demo.md) for the complete demo guide including act-by-ac
 
 - [x] MVP implementation — Supervisor, Ingestion, Reconciliation, async HITL
 - [x] SharedState TypedDict + LangGraph StateGraph
-- [x] Async HITL cycle — interrupt() + Flask webhook + mobile approval
+- [x] Async HITL cycle — interrupt() + FastAPI webhook + mobile approval
 - [x] Test suite — 14+ tests, 3 end-to-end scenarios
 - [x] Gmail MCP real integration (Phase 2)
 - [x] QBO MCP real integration (Phase 2)

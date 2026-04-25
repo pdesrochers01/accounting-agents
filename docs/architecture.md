@@ -44,8 +44,8 @@ ingestion_node
 | `routing_signal` | `RoutingSignal` | Ingestion, Reconciliation | Supervisor (routing) |
 | `reconciliation_gaps` | `list[ReconciliationGap]` | Reconciliation Agent | HITL node, Supervisor |
 | `hitl_pending` | `bool` | Reconciliation (True), Webhook (False) | Supervisor |
-| `hitl_decision` | `Optional[HitlDecision]` | Flask Webhook | Supervisor, HITL node |
-| `hitl_comment` | `Optional[str]` | Flask Webhook | Reconciliation Agent |
+| `hitl_decision` | `Optional[HitlDecision]` | FastAPI Webhook | Supervisor, HITL node |
+| `hitl_comment` | `Optional[str]` | FastAPI Webhook | Reconciliation Agent |
 | `thread_id` | `str` | Supervisor at init | Webhook, SqliteSaver |
 | `timeout_at` | `Optional[datetime]` | HITL node | Timeout handler |
 | `error_log` | `list[str]` | All agents | Supervisor |
@@ -98,11 +98,11 @@ SqliteSaver is used as the LangGraph checkpointer.
 
 ## HITL Webhook
 
-Flask server (`webhook.py`) running on port 5001.
+FastAPI + uvicorn (`webhook.py`) running on port 5001.
 - `GET /health` — health check
 - `GET /webhook?thread_id=X&decision=Y&comment=Z` — resume thread
+- `decision` validated as `Literal["approve","modify","block"]` — 422 on invalid input
 - Dev tunnel: ngrok (`ngrok http 5001`)
-- Phase 2: FastAPI + Pydantic validation
 
 ## Environment Variables
 
@@ -119,4 +119,4 @@ Flask server (`webhook.py`) running on port 5001.
   false matches on document numbers (e.g. INV-4524)
 - "modify" path: Reconciliation Agent checks `hitl_comment` and
   returns `completed` immediately to prevent infinite loop
-- Flask (MVP) → FastAPI migration planned for Phase 2
+- FastAPI + uvicorn (Phase 2) — migrated from Flask (MVP)

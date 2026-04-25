@@ -17,7 +17,7 @@ Before running the demo, three terminals must be active:
 
 | Terminal | Command | Purpose |
 |---|---|---|
-| Terminal 1 | `PYTHONPATH=. .venv/bin/python accounting_agents/webhook.py` | Flask HITL webhook on port 5001 |
+| Terminal 1 | `PYTHONPATH=. .venv/bin/python accounting_agents/webhook.py` | FastAPI HITL webhook on port 5001 |
 | Terminal 2 | `ngrok http 5001` | Public tunnel for iPhone webhook delivery |
 | Terminal 3 | `PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py` | Demo script |
 
@@ -30,7 +30,7 @@ Also required:
 
 ## Running the Demo
 
-**Full demo** (requires Flask + ngrok):
+**Full demo** (requires FastAPI server + ngrok):
 ```bash
 PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py
 ```
@@ -106,10 +106,10 @@ A yellow panel announces the graph interrupt. A spinner shows Gmail being sent t
 **What the audience sees:**
 A live timer counting up (MM:SS format) with a countdown to the 120-second timeout. The demo waits for the accountant to tap Approve, Modify, or Block on their iPhone.
 
-**Agent responsible:** HITL Node + Flask Webhook (`accounting_agents/webhook.py`)
+**Agent responsible:** HITL Node + FastAPI Webhook (`accounting_agents/webhook.py`)
 
 **Under the hood:**
-The demo script polls `graph.get_state(config)` directly from the SQLite checkpointer every second — it does not call Flask. This makes it immune to Flask auto-reloader restarts. When the accountant taps a link on their iPhone, the ngrok tunnel delivers the GET request to Flask, which calls `graph.update_state()` and resumes the thread. The next poll in Act 5 picks up the `hitl_decision` value and exits the wait loop.
+The demo script polls `graph.get_state(config)` directly from the SQLite checkpointer every second — it does not call the FastAPI server. When the accountant taps a link on their iPhone, the ngrok tunnel delivers the GET request to the FastAPI server, which calls `graph.update_state()` and resumes the thread. The next poll in Act 5 picks up the `hitl_decision` value and exits the wait loop. uvicorn eliminates the auto-reloader issue present in the prior Flask implementation.
 
 **Talking point for presenter:**
 > "The accountant can approve from anywhere — office, home, or vacation. All they need is their phone. The architecture is mobile-first by design, not as an afterthought."
@@ -147,7 +147,7 @@ After `graph.update_state()` injects the `hitl_decision`, the graph resumes from
 
 4. **Fiduciary compliance** — The four-level escalation model (N1–N4) maps directly to accounting firm risk protocols. N3 and N4 decisions are always human-gated.
 
-5. **Open source** — Apache 2.0 licensed. No vendor lock-in. Extensible architecture — swap QBO for Xero, swap Flask for FastAPI, add agents without touching shared state.
+5. **Open source** — Apache 2.0 licensed. No vendor lock-in. Extensible architecture — swap QBO for Xero, swap agents without touching shared state.
 
 ---
 
@@ -207,7 +207,7 @@ for any CPA firm. AccountingAgents addresses this at every layer:
 
 | Feature | Description | Status |
 |---|---|---|
-| FastAPI webhook | Replace Flask — async native, Pydantic v2 validation, Swagger docs | Planned |
+| FastAPI webhook | Migrated from Flask — Pydantic Literal validation, uvicorn, 422 auto on invalid input | Done ✅ |
 | LLM classification | Replace keyword matching in Ingestion Agent with Claude API call | Planned |
 | AR Agent | Automated overdue invoice follow-up and escalation | Planned |
 | AP Agent | Vendor payment approval with N3 HITL gate | Planned |

@@ -125,7 +125,7 @@ def run_demo():
     print(f"  {base_url}/webhook?thread_id={thread_id}&decision=block&ngrok-skip-browser-warning=true")
     print(f"\n{'=' * 60}")
     print("Waiting for webhook decision...")
-    print("(Flask logs in Terminal 1 will confirm receipt)")
+    print("(FastAPI server logs in Terminal 1 will confirm receipt)")
     print(f"{'=' * 60}\n")
 
 

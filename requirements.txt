@@ -7,7 +7,8 @@ langgraph-checkpoint-sqlite>=3.0.0
 mcp>=1.0.0
 
 # Webhook server
-flask>=3.0.0
+fastapi>=0.111.0
+uvicorn>=0.29.0
 
 # Utilities
 python-dotenv>=1.0.0

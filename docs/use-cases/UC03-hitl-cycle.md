@@ -6,7 +6,7 @@
 ## Preconditions
 - SharedState contains the exception details (`reconciliation_gaps` or equivalent)
 - Gmail MCP connected
-- Flask webhook listening (ngrok active in dev)
+- FastAPI webhook listening (ngrok active in dev)
 - SqliteSaver configured as checkpointer
 
 ## Main Flow
@@ -15,7 +15,7 @@
 3. The email contains 3 action links: **Approve** / **Modify** / **Block**
 4. Gmail MCP sends the email to the supervising accountant
 5. The accountant receives the email on their iPhone and clicks a link
-6. The click triggers an HTTP GET request to the Flask webhook (`/webhook?thread_id=xxx&decision=approve`)
+6. The click triggers an HTTP GET request to the FastAPI webhook (`/webhook?thread_id=xxx&decision=approve`)
 7. The webhook writes the decision to SharedState (`hitl_decision`, `hitl_pending: false`)
 8. LangGraph resumes the suspended thread at the exact point of interruption
 9. The Supervisor routes based on the decision: executes, modifies, or blocks the action
