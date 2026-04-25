@@ -50,7 +50,7 @@ Gmail surveillance active on `pdesrochers01@gmail.com`. A new email arrives from
 The `input_document` dict is injected directly into `SharedState`. The Ingestion Agent's `_classify()` function runs keyword matching against the raw text, sets `document_type = "bank_statement"`, and writes a delta back to `SharedState` via `documents_ingested`.
 
 **Talking point for presenter:**
-> "In production, Gmail MCP monitors the inbox continuously. The moment a bank statement arrives, the agent wakes up automatically — no polling, no manual trigger."
+> "In production, Gmail MCP monitors the inbox continuously. The moment a bank statement arrives, the agent wakes up automatically — no polling, no manual trigger. Also, in this demo, classification uses keyword matching. Phase 2 Feature 4 will replace this with a direct LLM call — enabling context-aware classification of any financial document regardless of format or language."
 
 ---
 
