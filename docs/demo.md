@@ -138,7 +138,7 @@ After `graph.update_state()` injects the `hitl_decision`, the graph resumes from
 
 ---
 
-## Key Messages for the CEO
+## Key Messages
 
 1. **MCP-native** — All external tool access goes through official MCP servers (Gmail, QuickBooks). No fragile custom wrappers. Easily swappable as new MCP servers emerge.
 
