@@ -35,13 +35,6 @@ Also required:
 PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py
 ```
 
-**Dry-run** (Acts 1–3 only — no Gmail sent, no graph executed):
-```bash
-PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py --dry-run
-```
-
-Expected duration: ~2 minutes (from script start to iPhone approval).
-
 ---
 
 ## Act-by-Act Narrative
