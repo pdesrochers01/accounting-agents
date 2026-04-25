@@ -127,7 +127,13 @@ A decision panel showing the decision maker (Marie Lafleur), the decision (APPRO
 After `graph.update_state()` injects the `hitl_decision`, the graph resumes from the HITL node. The Supervisor evaluates `routing_signal` and routes to `__end__`. For "approve": reconciliation is accepted, file marked complete. For "block": file flagged for manual review. For "modify": `hitl_comment` is set; reconciliation node short-circuits to `"completed"` on the next tick (prevents re-escalation loop).
 
 **Talking point for presenter:**
-> "From email arrival to approved reconciliation: under 2 minutes. The same workflow manually takes an accountant 1–2 hours. That's the ROI in a single reconciliation cycle — and this is just one of seven agents."
+> "From email arrival to approved reconciliation: under 2 minutes."
+>
+> "Today we validate the decision. In Phase 3, each decision automatically triggers the appropriate accounting actions. For example:
+> - **APPROVE** → QBO is updated automatically, an audit note is created in the client file, and the Reporting Agent refreshes the P&L.
+> - **BLOCK** → the transaction is frozen in QBO, an investigation file is opened, and the Compliance Agent sends a regulatory alert if the amount exceeds the threshold.
+>
+> The same workflow manually takes an accountant 1–2 hours. That's the ROI in a single reconciliation cycle — and this is just one of seven agents."
 
 ---
 
