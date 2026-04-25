@@ -203,7 +203,7 @@ for any CPA firm. AccountingAgents addresses this at every layer:
 
 ---
 
-## Phase 2 — Next Steps (for investor discussion)
+## Phase 2 — Next Steps
 
 | Feature | Description | Status |
 |---|---|---|
