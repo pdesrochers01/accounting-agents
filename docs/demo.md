@@ -71,6 +71,8 @@ A spinner while the Reconciliation Agent queries QuickBooks Online. Then a rich 
 **Under the hood:**
 `_fetch_qbo_bills_mcp()` spawns the Intuit MCP server as a Node.js subprocess via `stdio_client`. It calls the `search_bills` tool and parses the JSON response line by line. Only CAD bills flow into the reconciliation logic. `NODE_NO_WARNINGS=1` suppresses the Node.js punycode deprecation warning from stderr.
 
+Note: In this demo, the Intuit MCP server runs locally as a Node.js subprocess spawned automatically by `stdio_client` — no separate terminal required. In production, it would be deployed as a hosted service. Intuit and Anthropic announced a partnership in February 2026 that includes a hosted QBO MCP integration directly in Claude.ai — currently in rollout.
+
 **Talking point for presenter:**
 > "This is a live query to QuickBooks Online via the official Intuit MCP server — real data, real time. No custom API wrapper, no scraping. The same MCP protocol that any certified integration uses."
 
