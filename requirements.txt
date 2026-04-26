@@ -19,3 +19,6 @@ google-api-python-client>=2.0.0
 
 # Demo / CLI display
 rich>=13.0.0
+
+# LLM classification (Phase 2)
+pydantic-ai[anthropic]>=0.1.0

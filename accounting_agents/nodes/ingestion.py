@@ -1,24 +1,32 @@
 """
-Ingestion Agent node — real implementation (MVP).
+Ingestion Agent node — real implementation (Phase 2).
 
 Responsibilities (UC01):
   1. Read input_document from SharedState
-  2. Classify document type by keyword matching
-     (LLM classification deferred to Phase 2)
+  2. Classify document type (hybrid: keyword pre-filter + LLM fallback)
   3. Extract metadata: date, amount, vendor/client, document number
   4. Write IngestedDocument to documents_ingested
   5. Emit routing_signal
+
+Classification modes (CLASSIFICATION_MODE env var):
+  keyword : keyword matching only (fast, offline, no LLM call)
+  llm     : keyword pre-filter; LLM only for ambiguous docs (default)
 
 Classification rules (keyword matching, case-insensitive):
   supplier_invoice : facture, invoice, fournisseur, vendor, montant dû
   bank_statement   : relevé, statement, solde, balance, bancaire
   receipt          : reçu, receipt, paiement reçu, payment received
-  other            : no match → routing: unrecognized
+  other            : no match → LLM call (llm mode) or unrecognized (keyword mode)
 """
 
+import os
 import re
 import uuid
 from datetime import datetime
+from typing import Literal
+
+from pydantic import BaseModel
+from pydantic_ai import Agent, ModelRetry
 
 from accounting_agents.state import (
     AccountingAgentsState,
@@ -45,13 +53,82 @@ CLASSIFICATION_RULES: list[tuple[DocumentType, list[str]]] = [
 ]
 
 
-def _classify(raw_text: str) -> DocumentType:
+class ClassificationResult(BaseModel):
+    document_type: Literal[
+        "supplier_invoice", "bank_statement", "receipt", "other"
+    ]
+    confidence: float  # 0.0 to 1.0
+    reasoning: str
+
+
+_classifier_instance = None
+
+
+def _get_classifier() -> Agent:
+    global _classifier_instance
+    if _classifier_instance is not None:
+        return _classifier_instance
+
+    agent = Agent(
+        os.getenv("CLASSIFICATION_MODEL", "anthropic:claude-haiku-4-5-20251001"),
+        output_type=ClassificationResult,
+        system_prompt=(
+            "You are an accounting document classifier. "
+            "Classify the document into one of: supplier_invoice, "
+            "bank_statement, receipt, other. "
+            "Return document_type, confidence (0.0-1.0), and reasoning. "
+            "Documents may be in French or English."
+        ),
+    )
+
+    @agent.output_validator
+    async def _validate_confidence(ctx, output: ClassificationResult) -> ClassificationResult:
+        if output.confidence < 0.5:
+            raise ModelRetry(
+                "Confidence too low. Re-examine the document carefully "
+                "and provide a more confident classification."
+            )
+        return output
+
+    _classifier_instance = agent
+    return _classifier_instance
+
+
+def _classify_keyword(raw_text: str) -> DocumentType:
     """Classify document type by keyword matching."""
     text_lower = raw_text.lower()
     for doc_type, keywords in CLASSIFICATION_RULES:
         if any(kw in text_lower for kw in keywords):
             return doc_type
     return "other"
+
+
+def _classify(raw_text: str) -> str:
+    """
+    Hybrid classifier:
+    - CLASSIFICATION_MODE=keyword: keyword matching only (fast, offline)
+    - CLASSIFICATION_MODE=llm: keyword pre-filter, LLM on ambiguous docs
+    If keyword match returns a confident result (not "other"), skip LLM.
+    If keyword returns "other" or mode=llm, call LLM classifier.
+    Falls back to keyword result on any LLM error.
+    """
+    mode = os.getenv("CLASSIFICATION_MODE", "llm")
+    keyword_result = _classify_keyword(raw_text)
+
+    if mode == "keyword":
+        return keyword_result
+
+    # LLM mode: skip LLM call if keyword already confident
+    if keyword_result != "other":
+        return keyword_result
+
+    # Call LLM for ambiguous documents
+    try:
+        result = _get_classifier().run_sync(raw_text[:3000])
+        return result.output.document_type
+    except Exception:
+        # Fallback to keyword result on any LLM error
+        return keyword_result
 
 
 # ── Metadata extraction ──────────────────────────────────────────

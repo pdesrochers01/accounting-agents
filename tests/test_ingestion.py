@@ -3,9 +3,12 @@ Unit tests for the real Ingestion Agent node.
 No MCP, no LangGraph graph execution — pure node logic.
 """
 
+import os
+
 from accounting_agents.nodes.ingestion import (
     ingestion_node,
     _classify,
+    _classify_keyword,
     _extract_amount,
     _extract_date,
     _extract_vendor,
@@ -15,26 +18,41 @@ from tests.fixtures.scenarios import scenario_gap_n3
 
 
 def test_classify_supplier_invoice():
-    assert _classify("FACTURE\nFournisseur: Hydro-Québec") == "supplier_invoice"
-    assert _classify("Invoice\nVendor: Telus") == "supplier_invoice"
+    assert _classify_keyword("FACTURE\nFournisseur: Hydro-Québec") == "supplier_invoice"
+    assert _classify_keyword("Invoice\nVendor: Telus") == "supplier_invoice"
     print("✅ test_classify_supplier_invoice passed")
 
 
 def test_classify_bank_statement():
-    assert _classify("Relevé bancaire\nSolde: $1,200.00") == "bank_statement"
-    assert _classify("Bank Statement\nBalance: $500.00") == "bank_statement"
+    assert _classify_keyword("Relevé bancaire\nSolde: $1,200.00") == "bank_statement"
+    assert _classify_keyword("Bank Statement\nBalance: $500.00") == "bank_statement"
     print("✅ test_classify_bank_statement passed")
 
 
 def test_classify_receipt():
-    assert _classify("Reçu\nPaiement reçu: $50.00") == "receipt"
-    assert _classify("Receipt\nPayment received") == "receipt"
+    assert _classify_keyword("Reçu\nPaiement reçu: $50.00") == "receipt"
+    assert _classify_keyword("Receipt\nPayment received") == "receipt"
     print("✅ test_classify_receipt passed")
 
 
 def test_classify_unrecognized():
-    assert _classify("Lorem ipsum dolor sit amet") == "other"
+    assert _classify_keyword("Lorem ipsum dolor sit amet") == "other"
     print("✅ test_classify_unrecognized passed")
+
+
+def test_classify_llm_fallback():
+    """Validates fallback path: keyword mode, ambiguous doc → 'other' without LLM call."""
+    original = os.environ.get("CLASSIFICATION_MODE")
+    os.environ["CLASSIFICATION_MODE"] = "keyword"
+    try:
+        result = _classify("Lorem ipsum dolor sit amet")
+        assert result == "other"
+    finally:
+        if original is None:
+            os.environ.pop("CLASSIFICATION_MODE", None)
+        else:
+            os.environ["CLASSIFICATION_MODE"] = original
+    print("✅ test_classify_llm_fallback passed")
 
 
 def test_extract_amount():
@@ -110,6 +128,7 @@ if __name__ == "__main__":
     test_classify_bank_statement()
     test_classify_receipt()
     test_classify_unrecognized()
+    test_classify_llm_fallback()
     test_extract_amount()
     test_extract_date()
     test_ingestion_node_supplier_invoice()
