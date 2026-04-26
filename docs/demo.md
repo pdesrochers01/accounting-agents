@@ -47,10 +47,10 @@ Gmail surveillance active on `pdesrochers01@gmail.com`. A new email arrives from
 **Agent responsible:** Ingestion Agent (`accounting_agents/nodes/ingestion.py`)
 
 **Under the hood:**
-The `input_document` dict is injected directly into `SharedState`. The Ingestion Agent's `_classify()` function runs keyword matching against the raw text, sets `document_type = "bank_statement"`, and writes a delta back to `SharedState` via `documents_ingested`.
+The `input_document` dict is injected directly into `SharedState`. The Ingestion Agent's `_classify()` function uses a hybrid classifier: keyword pre-filter on clear documents (free, offline), Pydantic AI Agent (LLM) on ambiguous documents. LLM-agnostic: switch model via `CLASSIFICATION_MODEL` in `.env`. Sets `document_type = "bank_statement"` and writes a delta back to `SharedState` via `documents_ingested`.
 
 **Talking point for presenter:**
-> "In production, Gmail MCP monitors the inbox continuously. The moment a bank statement arrives, the agent wakes up automatically — no polling, no manual trigger. Also, in this demo, classification uses keyword matching. Phase 2 Feature 4 will replace this with a direct LLM call — enabling context-aware classification of any financial document regardless of format or language."
+> "In production, Gmail MCP monitors the inbox continuously. The moment a bank statement arrives, the agent wakes up automatically — no polling, no manual trigger. Classification uses a hybrid approach: a fast keyword pre-filter handles clear documents offline, and a Pydantic AI Agent backed by Claude handles ambiguous ones — enabling context-aware classification of any financial document regardless of format or language."
 
 ---
 
@@ -208,7 +208,7 @@ for any CPA firm. AccountingAgents addresses this at every layer:
 | Feature | Description | Status |
 |---|---|---|
 | FastAPI webhook | Migrated from Flask — Pydantic Literal validation, uvicorn, 422 auto on invalid input | Done ✅ |
-| LLM classification | Replace keyword matching in Ingestion Agent with Claude API call | Planned |
+| LLM classification | Hybrid keyword pre-filter + Pydantic AI Agent (LLM) on ambiguous docs. LLM-agnostic via CLASSIFICATION_MODEL in .env | Done ✅ |
 | AR Agent | Automated overdue invoice follow-up and escalation | Planned |
 | AP Agent | Vendor payment approval with N3 HITL gate | Planned |
 | Reporting Agent | P&L, cash flow, compliance deadline monitoring | Planned |

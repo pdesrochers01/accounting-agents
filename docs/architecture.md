@@ -63,10 +63,12 @@ ingestion_node
 
 ### Ingestion Agent (`nodes/ingestion.py`)
 - Reads `input_document` from SharedState
-- Classifies document type by keyword matching (EN + FR)
+- Hybrid classifier: keyword pre-filter (free, offline) → Pydantic AI
+  Agent (LLM) on ambiguous documents. LLM-agnostic via model string
+  in .env (Anthropic, OpenAI, Ollama). CLASSIFICATION_MODE=llm|keyword.
 - Extracts: amount, date, vendor, document number
 - Writes: `documents_ingested`, `routing_signal`
-- Phase 2: Gmail MCP polling + LLM classification
+- Phase 2: Gmail MCP polling ✅ + LLM classification ✅
 
 ### Reconciliation Agent (`nodes/reconciliation.py`)
 - Reads `documents_ingested` from SharedState

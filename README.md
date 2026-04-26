@@ -93,7 +93,7 @@ accounting-agents/
 │   ├── routing.py            # Conditional routing functions
 │   ├── webhook.py            # FastAPI HITL webhook (port 5001)
 │   └── nodes/
-│       ├── ingestion.py      # Ingestion Agent (keyword classification)
+│       ├── ingestion.py      # Ingestion Agent (hybrid keyword + Pydantic AI LLM classification)
 │       ├── reconciliation.py # Reconciliation Agent (gap detection)
 │       └── hitl.py           # HITL node — interrupt() + notification
 ├── docs/
@@ -198,8 +198,8 @@ See [docs/demo.md](docs/demo.md) for the complete demo guide including act-by-ac
 - [x] Test suite — 14+ tests, 3 end-to-end scenarios
 - [x] Gmail MCP real integration (Phase 2)
 - [x] QBO MCP real integration (Phase 2)
-- [ ] FastAPI webhook + Pydantic validation (Phase 2)
-- [ ] LLM-based document classification (Phase 2)
+- [x] FastAPI webhook + Pydantic validation (Phase 2)
+- [x] LLM-based document classification (Phase 2, Pydantic AI)
 - [ ] AR Agent + AP Agent + Reporting Agent (Phase 3)
 - [ ] Compliance Agent + Onboarding Agent (Phase 4)
 - [ ] Experimental validation paper (agent accuracy, HITL approval rates)
