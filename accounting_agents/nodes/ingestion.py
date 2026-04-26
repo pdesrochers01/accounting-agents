@@ -261,8 +261,10 @@ def ingestion_node(state: AccountingAgentsState) -> dict:
     print(f"[ingestion_node] Vendor: {vendor} | Amount: ${amount:,.2f} CAD")
     print(f"[ingestion_node] Document number: {doc_number} | Date: {date}")
 
+    routing_signal = "to_ap" if doc_type == "supplier_invoice" else "to_reconciliation"
+
     return {
         "documents_ingested": existing_docs,
-        "routing_signal": "to_reconciliation",
+        "routing_signal": routing_signal,
         "error_log": error_log,
     }

@@ -6,7 +6,40 @@ def route_after_ingestion(state: AccountingAgentsState) -> str:
     signal = state.get("routing_signal")
     if signal == "to_reconciliation":
         return "reconciliation"
+    if signal == "to_ap":
+        return "ap"
+    if signal == "to_ar":
+        return "ar"
+    if signal == "to_reporting":
+        return "reporting"
     # covers: "unrecognized", None, any error
+    return "end"
+
+
+def route_after_reporting(state: AccountingAgentsState) -> str:
+    """Route after reporting_node based on routing_signal."""
+    signal = state.get("routing_signal")
+    if signal == "hitl_pending":
+        return "hitl"
+    # covers: "completed" (N1/N2), "no_report_data", "unrecognized" (N4)
+    return "end"
+
+
+def route_after_ar(state: AccountingAgentsState) -> str:
+    """Route after ar_node based on routing_signal."""
+    signal = state.get("routing_signal")
+    if signal == "hitl_pending":
+        return "hitl"
+    # covers: "completed" (N1/N2), "nothing_to_collect", "unrecognized"
+    return "end"
+
+
+def route_after_ap(state: AccountingAgentsState) -> str:
+    """Route after ap_node based on routing_signal."""
+    signal = state.get("routing_signal")
+    if signal == "hitl_pending":
+        return "hitl"
+    # covers: "completed" (N1/N2), "duplicate_bill", "unrecognized"
     return "end"
 
 

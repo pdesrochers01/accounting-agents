@@ -84,7 +84,7 @@ def test_ingestion_node_supplier_invoice():
 
     result = ingestion_node(state)
 
-    assert result["routing_signal"] == "to_reconciliation"
+    assert result["routing_signal"] == "to_ap"
     assert len(result["documents_ingested"]) == 1
     doc = result["documents_ingested"][0]
     assert doc["document_type"] == "supplier_invoice"

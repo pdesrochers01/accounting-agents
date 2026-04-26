@@ -225,7 +225,7 @@ PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
 - [x] QBO MCP real integration (Phase 2)
 - [x] FastAPI webhook + Pydantic validation (Phase 2)
 - [x] LLM-based document classification (Phase 2, Pydantic AI)
-- [ ] AR Agent + AP Agent + Reporting Agent (Phase 3)
+- [x] AR Agent + AP Agent + Reporting Agent (Phase 3)
 - [ ] Compliance Agent + Onboarding Agent (Phase 4)
 - [ ] Experimental validation paper (agent accuracy, HITL approval rates)
 - [ ] Support for Xero, Sage, Microsoft Dynamics 365
