@@ -188,6 +188,31 @@ PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py
 
 See [docs/demo.md](docs/demo.md) for the complete demo guide including act-by-act narrative and presenter talking points.
 
+### Pre-demo checklist
+
+Run these before any live presentation:
+
+```bash
+# 1. Verify QBO — must show 6 CAD bills including Hydro-Québec $2,450.00
+PYTHONPATH=. .venv/bin/python tests/test_qbo_mcp.py
+
+# 2. Dry-run Acts 1-3 (no Gmail, no graph)
+PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py --dry-run
+```
+
+**If test_qbo_mcp.py shows 0 bills** — QBO token expired (Intuit OAuth, ~100 day lifetime):
+```bash
+PYTHONPATH=. .venv/bin/python scripts/generate_qbo_token.py   # browser OAuth flow
+PYTHONPATH=. .venv/bin/python tests/test_qbo_mcp.py           # verify 6 CAD bills
+```
+
+**If duplicate bills appear** (`12 bills` instead of `8`) — run cleanup without re-seeding:
+```bash
+PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
+```
+
+**Gmail token** — expires every hour but auto-refreshes. If Gmail fails mid-demo, the script now shows a clear error with recovery instructions instead of silently reporting success.
+
 ---
 
 ## Roadmap

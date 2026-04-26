@@ -261,6 +261,12 @@ def reconciliation_node(state: AccountingAgentsState) -> dict:
                 "reconciliation_gaps": [],
                 "error_log": error_log,
             }
+        cad_count = len([b for b in qbo_bills if b.get("currency") == "CAD"])
+        if cad_count == 0:
+            error_log.append(
+                "[reconciliation_node] WARNING: 0 CAD bills from QBO — "
+                "token may be expired. Run scripts/generate_qbo_token.py."
+            )
         gaps = _compare_with_bank_statement(qbo_bills, bank_statement)
 
     else:

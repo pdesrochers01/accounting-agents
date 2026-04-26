@@ -104,12 +104,14 @@ def _check_webhook() -> bool:
         return False
 
 
-def _suppress_stdout_invoke(graph, state: dict, config: dict) -> dict:
-    """Run graph.invoke() with stdout redirected so app print() calls don't corrupt rich output."""
+def _suppress_stdout_invoke(graph, state: dict, config: dict) -> tuple[dict, str]:
+    """Run graph.invoke() capturing stdout. Returns (result, captured_output)."""
     _old = sys.stdout
-    sys.stdout = io.StringIO()
+    buf = io.StringIO()
+    sys.stdout = buf
     try:
-        return graph.invoke(state, config=config)
+        result = graph.invoke(state, config=config)
+        return result, buf.getvalue()
     finally:
         sys.stdout = _old
 
@@ -192,10 +194,19 @@ def act2_qbo_fetch() -> list[dict]:
     cad_bills = [b for b in bills if b.get("currency") == "CAD"]
     other_bills = [b for b in bills if b.get("currency") != "CAD"]
 
-    console.print(
-        f"  [green]✓[/green] {len(bills)} bills fetched from QBO Sandbox "
-        f"([white]{len(cad_bills)} CAD[/white], [dim]{len(other_bills)} foreign currency[/dim])"
-    )
+    if len(cad_bills) == 0:
+        console.print(
+            f"  [yellow]⚠[/yellow]  [bold yellow]0 CAD bills fetched from QBO[/bold yellow] "
+            f"— token likely expired"
+        )
+        console.print(
+            "  [dim]Recovery: scripts/generate_qbo_token.py → tests/test_qbo_mcp.py[/dim]"
+        )
+    else:
+        console.print(
+            f"  [green]✓[/green] {len(bills)} bills fetched from QBO Sandbox "
+            f"([white]{len(cad_bills)} CAD[/white], [dim]{len(other_bills)} foreign currency[/dim])"
+        )
     console.print()
 
     table = Table(
@@ -316,8 +327,11 @@ def act4_hitl_interrupt(
     graph,
     config: dict,
     thread_id: str,
-) -> None:
-    """Run graph.invoke() — ingestion → reconciliation (QBO) → hitl (Gmail + interrupt)."""
+) -> bool:
+    """Run graph.invoke() — ingestion → reconciliation (QBO) → hitl (Gmail + interrupt).
+
+    Returns True if HITL was triggered and notification sent successfully.
+    """
     console.print()
     console.print(Panel(
         "[bold yellow]ACT 4 — HITL Interrupt            [Supervisor + HITL Node][/bold yellow]",
@@ -325,23 +339,54 @@ def act4_hitl_interrupt(
         padding=(0, 2),
     ))
     console.print()
-    console.print(
-        "  [yellow]⚡[/yellow] [bold]Graph interrupted[/bold] — human decision required"
-    )
-    time.sleep(0.5)
 
     # graph.invoke runs: ingestion → reconciliation (QBO MCP) → hitl Phase A (Gmail + interrupt())
     with console.status(
-        "[cyan]Sending Gmail notification to Marie Lafleur...[/cyan]",
+        "[cyan]Running graph — reconciliation + HITL notification...[/cyan]",
         spinner="dots",
     ):
-        _suppress_stdout_invoke(graph, state, config)
+        _, captured = _suppress_stdout_invoke(graph, state, config)
 
+    # Check if graph was actually interrupted (hitl_node called interrupt())
+    graph_state = graph.get_state(config)
+    if not graph_state.next:
+        console.print(
+            "  [red]✗[/red]  HITL not triggered — no N3 gap detected by graph."
+        )
+        console.print(
+            "  [dim]Likely cause: 0 CAD bills in QBO. "
+            "Run scripts/generate_qbo_token.py then tests/test_qbo_mcp.py[/dim]"
+        )
+        return False
+
+    console.print(
+        "  [yellow]⚡[/yellow] [bold]Graph interrupted[/bold] — human decision required"
+    )
+
+    # Check if notification was actually sent
     notify_email = os.getenv("HITL_NOTIFY_EMAIL", "accountant@example.com")
-    console.print(f"  [green]✓[/green] [bold]Gmail sent[/bold] → {notify_email}")
+    hitl_mode = os.getenv("HITL_MODE", "mock")
+    gmail_ok = (
+        "Gmail sent to" in captured
+        if hitl_mode == "gmail"
+        else "HITL NOTIFICATION" in captured
+    )
+
+    if gmail_ok:
+        console.print(f"  [green]✓[/green] [bold]Gmail sent[/bold] → {notify_email}")
+    else:
+        console.print(
+            f"  [red]✗[/red] [bold]Gmail failed[/bold] — token expired or auth error"
+        )
+        console.print(
+            "  [dim]Fix: PYTHONPATH=. .venv/bin/python scripts/generate_gmail_token.py[/dim]"
+        )
+        return False
+
     console.print(f"  Thread ID : [dim]{thread_id}[/dim]")
     console.print()
     console.print("  [yellow]⏳ Awaiting decision on iPhone...[/yellow]")
+    return True
 
 
 # ── Act 5 ────────────────────────────────────────────────────────
@@ -509,9 +554,25 @@ def main() -> None:
         "bank_statement": BANK_STATEMENT,
     }
 
+    n3_gaps = [g for g in gaps if g["escalation_level"] == "N3"]
+    if not n3_gaps:
+        console.print()
+        console.print(Panel(
+            "[yellow]No N3 gap detected — HITL will not be triggered.[/yellow]\n\n"
+            "Likely cause: 0 CAD bills fetched from QBO Sandbox.\n\n"
+            "Recovery:\n"
+            "  [bold]PYTHONPATH=. .venv/bin/python scripts/generate_qbo_token.py[/bold]\n"
+            "  [bold]PYTHONPATH=. .venv/bin/python tests/test_qbo_mcp.py[/bold]\n\n"
+            "Expected: 6 CAD bills including Hydro-Québec $2,450.00",
+            title="[yellow]Demo cannot proceed to ACT 4[/yellow]",
+            border_style="yellow",
+        ))
+        return
+
     start_time = time.time()
-    act4_hitl_interrupt(state, graph, config, thread_id)
-    act5_wait_decision(graph, config, start_time, thread_id)
+    hitl_ok = act4_hitl_interrupt(state, graph, config, thread_id)
+    if hitl_ok:
+        act5_wait_decision(graph, config, start_time, thread_id)
 
 
 if __name__ == "__main__":
