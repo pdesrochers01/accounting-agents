@@ -90,29 +90,40 @@ accounting-agents/
 ├── accounting_agents/
 │   ├── __init__.py
 │   ├── state.py              # SharedState TypedDict
-│   ├── graph.py              # LangGraph StateGraph
+│   ├── graph.py              # LangGraph StateGraph (7 nodes)
 │   ├── routing.py            # Conditional routing functions
 │   ├── webhook.py            # FastAPI HITL webhook (port 5001)
 │   └── nodes/
 │       ├── ingestion.py      # Ingestion Agent (hybrid keyword + Pydantic AI LLM classification)
 │       ├── reconciliation.py # Reconciliation Agent (gap detection)
-│       └── hitl.py           # HITL node — interrupt() + notification
+│       ├── hitl.py           # HITL node — interrupt() + notification
+│       ├── ap.py             # AP Agent (Phase 3)
+│       ├── ar.py             # AR Agent (Phase 3)
+│       └── reporting.py      # Reporting Agent (Phase 3)
 ├── docs/
-│   ├── use-cases/            # UC01, UC02, UC03
+│   ├── use-cases/            # UC01–UC06
+│   ├── architecture.md       # System architecture reference
+│   ├── development-setup.md  # Local dev setup guide
+│   ├── demo.md               # Demo guide and talking points
 │   ├── flowchart-macro.html  # Macro architecture diagram
 │   └── langgraph-hitl-gmail.html # LangGraph HITL flow diagram
 ├── tests/
 │   ├── fixtures/             # Fictional Quebec firm test data (CAD)
-│   ├── test_ingestion.py     # 9/9 tests
+│   ├── test_ingestion.py     # 10/10 tests
 │   ├── test_reconciliation.py # 2/2 tests
 │   ├── test_hitl.py          # Full HITL cycle
+│   ├── test_ap.py            # 7/7 tests
+│   ├── test_ar.py            # 7/7 tests
+│   ├── test_reporting.py     # 7/7 tests
 │   ├── test_end_to_end_real.py # 3/3 end-to-end tests
 │   └── test_qbo_mcp.py       # QBO MCP live integration test (QBO_MODE=mcp)
 ├── scripts/
 │   ├── demo_end_to_end.py    # End-to-end narrative demo (Phase 2)
+│   ├── demo_hitl.py          # Standalone HITL demo script
 │   ├── generate_gmail_token.py  # Gmail OAuth2 token generator
 │   ├── generate_qbo_token.py    # QBO OAuth2 token generator
-│   └── seed_qbo_sandbox.py      # Seeds QBO sandbox with test vendors + bills
+│   ├── seed_qbo_sandbox.py      # Seeds QBO sandbox with test vendors + bills
+│   └── cleanup_qbo_bills.py     # Removes duplicate bills from QBO sandbox
 ├── hitl_emails/              # Mock email output (dev)
 ├── paper/
 │   └── accounting_agents_paper.pdf  # Preprint (April 2026)
@@ -221,7 +232,7 @@ PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
 - [x] MVP implementation — Supervisor, Ingestion, Reconciliation, async HITL
 - [x] SharedState TypedDict + LangGraph StateGraph
 - [x] Async HITL cycle — interrupt() + FastAPI webhook + mobile approval
-- [x] Test suite — 14+ tests, 3 end-to-end scenarios
+- [x] Test suite — 36+ tests (unit + end-to-end), 3 fixture scenarios
 - [x] Gmail MCP real integration (Phase 2)
 - [x] QBO MCP real integration (Phase 2)
 - [x] FastAPI webhook + Pydantic validation (Phase 2)
