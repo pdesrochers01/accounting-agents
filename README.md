@@ -18,6 +18,7 @@ AccountingAgents is a novel multi-agent Large Language Model (LLM) framework ins
 
 - **Multi-agent architecture** — Seven specialized roles modelled on real accounting firm structure, coordinated by a hierarchical Supervisor via a typed `SharedState`
 - **MCP-native integrations** — All external tool access is mediated through official Model Context Protocol servers; no fragile custom API wrappers
+- **Reliable LLM responses** - Python TypedDict and Pydantic AI for structured state management and data validation — ensuring the reliability of LLM responses.
 - **Asynchronous HITL mechanism** — LangGraph `interrupt()` + webhook resumption enables mobile approval from any device, with a 4-hour timeout and automatic escalation
 - **Four-level escalation model** — Risk-calibrated routing from fully automated (N1) to human transfer (N4), aligned with accounting fiduciary obligations
 - **Open-source** — Apache 2.0 licensed; targets small-to-medium accounting firms underserved by enterprise solutions
