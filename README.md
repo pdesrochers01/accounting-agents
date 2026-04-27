@@ -37,16 +37,17 @@ AccountingAgents builds on and extends the following works:
 
 ## Architecture Overview
 
-AccountingAgents comprises seven specialized agents organized in a hierarchical supervisor-worker graph. All inter-agent communication flows exclusively through a structured `SharedState` TypedDict, eliminating context corruption across long conversation histories.
-
-| Team | Agent | Goal | MCP Tools (MVP) |
-|---|---|---|---|
-| I. Ingestion | Ingestion Agent · Document Classifier | Capture & classify incoming financial documents | Gmail MCP · QBO MCP · LLM |
-| II. Reconciliation | Reconciliation Agent · Gap Detector | Match transactions vs. bank statements; flag discrepancies | QBO MCP · Drive MCP |
-| III. Reporting | Reporting Agent · Compliance Agent | Generate P&L, cash flow; monitor fiscal deadlines | QBO MCP · Gmail MCP · Calendar MCP |
-| IV. AR / AP / Client | AR Agent · AP Agent · Onboarding Agent | Track overdue invoices; approve vendor bills & payments; create client profiles | QBO MCP · Gmail MCP · Calendar MCP |
-| V. Supervisor | Supervisor · Decision Router | Orchestrate state, routing, and error handling | LangGraph StateGraph · checkpointer |
-| VI. HITL | HITL Notifier · Webhook Resumption | Async approval via messaging; resume suspended thread | Gmail MCP · FastAPI · SqliteSaver |
+| # | Agent | Goal | MCP Tools | MVP Scope |
+|---|---|---|---|---|
+| 1 | Ingestion Agent | Capture & classify incoming financial documents | Gmail MCP · QBO MCP · LLM | ✅ |
+| 2 | Reconciliation Agent | Match transactions vs. bank statements; flag discrepancies | QBO MCP · Drive MCP | ✅ |
+| 3 | AP Agent | Approve vendor bills and payments | QBO MCP · Gmail MCP | ✅ |
+| 4 | AR Agent | Track overdue invoices; send collection reminders | QBO MCP · Gmail MCP | ✅ |
+| 5 | Reporting Agent | Generate P&L, cash flow; detect anomalies | QBO MCP · Gmail MCP | ✅ |
+| 6 | Compliance Agent | Monitor fiscal deadlines and regulatory obligations | QBO MCP · Calendar MCP | ⬜ |
+| 7 | Onboarding Agent | Create and validate new client profiles | QBO MCP · Gmail MCP | ⬜ |
+| 8 | Supervisor | Orchestrate state, routing, and error handling | LangGraph StateGraph · checkpointer | ✅ |
+| 9 | HITL Notifier | Async approval via messaging; resume suspended thread | Gmail MCP · FastAPI · SqliteSaver | ✅ |
 
 *Table 1: AccountingAgents role definitions.*
 
