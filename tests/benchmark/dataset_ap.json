@@ -1,0 +1,322 @@
+[
+  {
+    "id": "AP-001",
+    "description": "Known vendor, amount $142.50 < $500 — auto-approve N1",
+    "bill": {
+      "vendor_name": "Papeterie Côté enr.",
+      "amount_cad": 142.50,
+      "invoice_number": "INV-2026-0341",
+      "invoice_date": "2026-03-10",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-002",
+    "description": "Known vendor, amount $89.00 < $500 — auto-approve N1",
+    "bill": {
+      "vendor_name": "Les Fournitures Dumont inc.",
+      "amount_cad": 89.00,
+      "invoice_number": "FD-2026-0101",
+      "invoice_date": "2026-03-05",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-003",
+    "description": "Known vendor Bell Canada, amount $445.75 < $500 — auto-approve N1",
+    "bill": {
+      "vendor_name": "Bell Canada",
+      "amount_cad": 445.75,
+      "invoice_number": "BC-2026-0892",
+      "invoice_date": "2026-02-28",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-004",
+    "description": "Known vendor Hydro-Québec, amount $320.00 < $500 — auto-approve N1",
+    "bill": {
+      "vendor_name": "Hydro-Québec",
+      "amount_cad": 320.00,
+      "invoice_number": "HQ-2026-0445",
+      "invoice_date": "2026-03-15",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-005",
+    "description": "Known vendor, amount $199.99 < $500 — auto-approve N1",
+    "bill": {
+      "vendor_name": "Services TechNord ltée",
+      "amount_cad": 199.99,
+      "invoice_number": "TN-2026-0220",
+      "invoice_date": "2026-03-01",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-006",
+    "description": "Known vendor, amount $650.00 ($500–$2000) — notify N2",
+    "bill": {
+      "vendor_name": "Maintenance Gagnon 2020 inc.",
+      "amount_cad": 650.00,
+      "invoice_number": "MG-2026-0500",
+      "invoice_date": "2026-03-10",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N2",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-007",
+    "description": "Known vendor, amount $1,200.75 ($500–$2000) — notify N2",
+    "bill": {
+      "vendor_name": "Équipements Bélanger & Fils",
+      "amount_cad": 1200.75,
+      "invoice_number": "EB-2026-0610",
+      "invoice_date": "2026-02-20",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N2",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-008",
+    "description": "Known vendor, amount $875.00 ($500–$2000) — notify N2",
+    "bill": {
+      "vendor_name": "Les Fournitures Dumont inc.",
+      "amount_cad": 875.00,
+      "invoice_number": "FD-2026-0780",
+      "invoice_date": "2026-03-18",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N2",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-009",
+    "description": "Known vendor, amount $1,950.00 ($500–$2000) — notify N2",
+    "bill": {
+      "vendor_name": "Services TechNord ltée",
+      "amount_cad": 1950.00,
+      "invoice_number": "TN-2026-1050",
+      "invoice_date": "2026-03-25",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N2",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-010",
+    "description": "Known vendor, amount $543.20 ($500–$2000) — notify N2",
+    "bill": {
+      "vendor_name": "Papeterie Côté enr.",
+      "amount_cad": 543.20,
+      "invoice_number": "PC-2026-0901",
+      "invoice_date": "2026-02-15",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N2",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "AP-011",
+    "description": "Known vendor Hydro-Québec, amount $2,450.00 > $2000 — HITL N3",
+    "bill": {
+      "vendor_name": "Hydro-Québec",
+      "amount_cad": 2450.00,
+      "invoice_number": "HQ-2026-2450",
+      "invoice_date": "2026-03-01",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "AP-012",
+    "description": "Known vendor, amount $3,800.75 > $2000 — HITL N3",
+    "bill": {
+      "vendor_name": "Équipements Bélanger & Fils",
+      "amount_cad": 3800.75,
+      "invoice_number": "EB-2026-3800",
+      "invoice_date": "2026-02-10",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "AP-013",
+    "description": "Known vendor, amount $5,100.00 > $2000 — HITL N3",
+    "bill": {
+      "vendor_name": "Maintenance Gagnon 2020 inc.",
+      "amount_cad": 5100.00,
+      "invoice_number": "MG-2026-5100",
+      "invoice_date": "2026-03-20",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "AP-014",
+    "description": "Known vendor Bell Canada, amount $2,001.00 > $2000 (limite) — HITL N3",
+    "bill": {
+      "vendor_name": "Bell Canada",
+      "amount_cad": 2001.00,
+      "invoice_number": "BC-2026-2001",
+      "invoice_date": "2026-03-12",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "AP-015",
+    "description": "Known vendor, amount $9,800.00 > $2000 — HITL N3",
+    "bill": {
+      "vendor_name": "Services TechNord ltée",
+      "amount_cad": 9800.00,
+      "invoice_number": "TN-2026-9800",
+      "invoice_date": "2026-02-28",
+      "is_known_vendor": true,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "AP-016",
+    "description": "Unknown vendor Fournisseur Inconnu XYZ — N4 transfer",
+    "bill": {
+      "vendor_name": "Fournisseur Inconnu XYZ",
+      "amount_cad": 780.00,
+      "invoice_number": "UNK-2026-0001",
+      "invoice_date": "2026-03-14",
+      "is_known_vendor": false,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N4",
+      "routing_signal": "unrecognized"
+    }
+  },
+  {
+    "id": "AP-017",
+    "description": "Unknown vendor Import Export 9999 inc. — N4 transfer",
+    "bill": {
+      "vendor_name": "Import Export 9999 inc.",
+      "amount_cad": 1450.00,
+      "invoice_number": "IE-2026-0099",
+      "invoice_date": "2026-03-21",
+      "is_known_vendor": false,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N4",
+      "routing_signal": "unrecognized"
+    }
+  },
+  {
+    "id": "AP-018",
+    "description": "Unknown vendor Consulting Unknown LLC — N4 transfer",
+    "bill": {
+      "vendor_name": "Consulting Unknown LLC",
+      "amount_cad": 3200.00,
+      "invoice_number": "CU-2026-0042",
+      "invoice_date": "2026-03-08",
+      "is_known_vendor": false,
+      "is_duplicate": false
+    },
+    "ground_truth": {
+      "escalation_level": "N4",
+      "routing_signal": "unrecognized"
+    }
+  },
+  {
+    "id": "AP-019",
+    "description": "Duplicate bill — same as AP-001 (Papeterie Côté, $142.50, 2026-03-10) — N4",
+    "bill": {
+      "vendor_name": "Papeterie Côté enr.",
+      "amount_cad": 142.50,
+      "invoice_number": "INV-2026-0341",
+      "invoice_date": "2026-03-10",
+      "is_known_vendor": true,
+      "is_duplicate": true
+    },
+    "ground_truth": {
+      "escalation_level": "N4",
+      "routing_signal": "duplicate_bill"
+    }
+  },
+  {
+    "id": "AP-020",
+    "description": "Duplicate bill — same as AP-006 (Maintenance Gagnon, $650.00, 2026-03-10) — N4",
+    "bill": {
+      "vendor_name": "Maintenance Gagnon 2020 inc.",
+      "amount_cad": 650.00,
+      "invoice_number": "MG-2026-0500",
+      "invoice_date": "2026-03-10",
+      "is_known_vendor": true,
+      "is_duplicate": true
+    },
+    "ground_truth": {
+      "escalation_level": "N4",
+      "routing_signal": "duplicate_bill"
+    }
+  }
+]

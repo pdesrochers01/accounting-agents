@@ -244,7 +244,14 @@ PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
 - [x] LLM-based document classification (Phase 2, Pydantic AI)
 - [x] AR Agent + AP Agent + Reporting Agent (Phase 3)
 - [x] Compliance Agent + Onboarding Agent (Phase 4)
+- [ ] AP vendor registry — replace static KNOWN_VENDORS list
+      with live QBO MCP list_vendors query (AP_MODE=mcp);
+      mock mode to use enriched fixture vendor list
 - [ ] Experimental validation paper (agent accuracy, HITL approval rates)
+- [ ] Internationalization — translate fixture data, keyword rules,
+      and benchmark datasets to English for broader open-source
+      accessibility; keyword rules are currently French-only
+      (multilingual support requires CLASSIFICATION_MODE=llm)
 - [ ] Support for Xero, Sage, Microsoft Dynamics 365
 
 ---

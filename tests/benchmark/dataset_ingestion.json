@@ -1,0 +1,272 @@
+[
+  {
+    "id": "ING-001",
+    "description": "Relevé bancaire Banque Nationale mars 2026",
+    "content": "BANQUE NATIONALE DU CANADA\nRelevé de compte — Mars 2026\nNuméro de compte: 12345-678\nSolde d'ouverture: 14,320.00 CAD\nSolde de clôture: 11,875.42 CAD\n2026-03-05 Virement entrant +2,500.00 | 2026-03-12 Paiement fournisseur -955.58",
+    "ground_truth": {
+      "document_type": "bank_statement",
+      "routing_signal": "to_reconciliation"
+    }
+  },
+  {
+    "id": "ING-002",
+    "description": "Relevé bancaire TD Canada Trust février 2026",
+    "content": "TD CANADA TRUST\nStatement of Account — Février 2026\nAccount No: 7890-123\nOpening Balance: 8,450.00 CAD\nClosing Balance: 7,215.30 CAD\n2026-02-10 Cheque #1042 -380.00 | 2026-02-20 Wire Transfer +1,145.30",
+    "ground_truth": {
+      "document_type": "bank_statement",
+      "routing_signal": "to_reconciliation"
+    }
+  },
+  {
+    "id": "ING-003",
+    "description": "Relevé bancaire Desjardins janvier 2026",
+    "content": "CAISSE DESJARDINS\nRelevé de compte — Janvier 2026\nNo de compte: 55678-901\nSolde initial: 22,100.00 CAD\nSolde final: 19,442.80 CAD\n2026-01-08 Retrait PAD -1,250.00 | 2026-01-15 Dépôt +572.80 | 2026-01-28 Frais bancaires -80.00",
+    "ground_truth": {
+      "document_type": "bank_statement",
+      "routing_signal": "to_reconciliation"
+    }
+  },
+  {
+    "id": "ING-004",
+    "description": "Relevé bancaire BMO mars 2026",
+    "content": "BANQUE DE MONTRÉAL — BMO\nCOMPTE COURANT ENTREPRISE\nPériode: 1er mars au 31 mars 2026\nNo de compte: 00234-567\nSolde d'ouverture: 5,600.00 CAD | Solde de clôture: 4,210.15 CAD\n2026-03-02 Paiement Bell Canada -185.50 | 2026-03-22 Paiement fournisseur -1,204.35",
+    "ground_truth": {
+      "document_type": "bank_statement",
+      "routing_signal": "to_reconciliation"
+    }
+  },
+  {
+    "id": "ING-005",
+    "description": "Relevé bancaire RBC février 2026",
+    "content": "BANQUE ROYALE DU CANADA — RBC\nRelevé mensuel — Février 2026\nCompte d'affaires no: 99012-345\nSolde d'ouverture: 31,000.00 CAD\nSolde de clôture: 28,745.60 CAD\n2026-02-14 Paiement Hydro-Québec -320.00 | 2026-02-28 Virement sortant -1,934.40",
+    "ground_truth": {
+      "document_type": "bank_statement",
+      "routing_signal": "to_reconciliation"
+    }
+  },
+  {
+    "id": "ING-006",
+    "description": "Facture fournisseur Les Fournitures Dumont inc.",
+    "content": "FACTURE\nLes Fournitures Dumont inc.\n1245 rue Commerciale, Québec (QC) G1R 2T8\nNo de facture: FD-2026-0892\nDate: 2026-03-15\nDescription: Fournitures de bureau — lot mensuel\nMontant: 548.75 CAD\nTPS/TVQ incluses\nTermes: Net 30 jours",
+    "ground_truth": {
+      "document_type": "supplier_invoice",
+      "routing_signal": "to_ap"
+    }
+  },
+  {
+    "id": "ING-007",
+    "description": "Facture fournisseur Services TechNord ltée",
+    "content": "INVOICE\nServices TechNord ltée\n87 boul. Industriel, Laval (QC) H7L 3P2\nInvoice No: TN-2026-1104\nDate: 2026-03-22\nDescription: Support informatique — contrat mensuel\nAmount: 1,200.00 CAD (taxes incluses)\nPayment Terms: Net 15",
+    "ground_truth": {
+      "document_type": "supplier_invoice",
+      "routing_signal": "to_ap"
+    }
+  },
+  {
+    "id": "ING-008",
+    "description": "Facture fournisseur Équipements Bélanger & Fils",
+    "content": "FACTURE\nÉquipements Bélanger & Fils\n330 avenue des Entreprises, Sherbrooke (QC) J1H 0B6\nNo: EB-2026-0557\nDate d'émission: 2026-03-08\nArticle: Entretien équipement lourd — trimestre Q1 2026\nTotal TTC: 3,800.75 CAD\nÉchéance: 2026-04-07",
+    "ground_truth": {
+      "document_type": "supplier_invoice",
+      "routing_signal": "to_ap"
+    }
+  },
+  {
+    "id": "ING-009",
+    "description": "Facture fournisseur Papeterie Côté enr.",
+    "content": "FACTURE\nPapeterie Côté enr.\n789 rue Saint-Laurent, Montréal (QC) H2Y 1Z3\nNo de facture: PC-2026-0234\nDate: 2026-02-28\nProduits: Papier, cartouches, reliures\nSous-total: 289.00 CAD | TPS: 14.45 | TVQ: 28.87\nTotal: 332.32 CAD\nNet 30",
+    "ground_truth": {
+      "document_type": "supplier_invoice",
+      "routing_signal": "to_ap"
+    }
+  },
+  {
+    "id": "ING-010",
+    "description": "Facture fournisseur Maintenance Gagnon 2020 inc.",
+    "content": "FACTURE\nMaintenance Gagnon 2020 inc.\n45 chemin des Artisans, Trois-Rivières (QC) G9A 5K2\nNo facture: MG-2026-0781\nDate: 2026-03-29\nService: Entretien préventif — systèmes CVAC\nMontant avant taxes: 2,100.00 CAD\nTPS (5%): 105.00 | TVQ (9.975%): 209.48\nTotal: 2,414.48 CAD",
+    "ground_truth": {
+      "document_type": "supplier_invoice",
+      "routing_signal": "to_ap"
+    }
+  },
+  {
+    "id": "ING-011",
+    "description": "Compte client Gestion Tremblay inc. — facture en souffrance",
+    "content": "FACTURE CLIENT\nGestion Tremblay inc.\nNo de facture: CLI-2026-0445\nDate d'émission: 2026-02-01\nDate d'échéance: 2026-03-03\nDays Outstanding: 55\nMontant dû: 4,200.00 CAD\nStatut: EN SOUFFRANCE — rappel automatique envoyé",
+    "ground_truth": {
+      "document_type": "client_invoice",
+      "routing_signal": "to_ar"
+    }
+  },
+  {
+    "id": "ING-012",
+    "description": "Compte client Construction Lefebvre ltée",
+    "content": "COMPTE CLIENT\nConstruction Lefebvre ltée\nFacture no: CLI-2026-0512\nDate: 2026-01-15\nÉchéance: 2026-02-14\nJours de retard: 72\nMontant impayé: 8,750.00 CAD\nDernière communication: 2026-03-10\nAction requise: escalade N3",
+    "ground_truth": {
+      "document_type": "client_invoice",
+      "routing_signal": "to_ar"
+    }
+  },
+  {
+    "id": "ING-013",
+    "description": "Facture client Transport Bergeron & Associés",
+    "content": "FACTURE CLIENT\nTransport Bergeron & Associés\nNo: CLI-2026-0603\nDate de facturation: 2026-03-01\nDate limite de paiement: 2026-03-31\nJours de retard: 28\nSolde dû: 1,450.00 CAD\nNote: Deuxième rappel transmis par courriel",
+    "ground_truth": {
+      "document_type": "client_invoice",
+      "routing_signal": "to_ar"
+    }
+  },
+  {
+    "id": "ING-014",
+    "description": "Compte client Clinique Médicale Fortin",
+    "content": "COMPTE CLIENT\nClinique Médicale Fortin\nFacture: CLI-2026-0389\nEmis le: 2026-01-20\nÉchu le: 2026-02-19\nRetard: 67 jours\nMontant: 620.00 CAD\nStatut: LITIGIEUX — client conteste les frais de consultation",
+    "ground_truth": {
+      "document_type": "client_invoice",
+      "routing_signal": "to_ar"
+    }
+  },
+  {
+    "id": "ING-015",
+    "description": "Facture client Immobilier Paquette inc.",
+    "content": "FACTURE CLIENT\nImmobilier Paquette inc.\nNo facture: CLI-2026-0711\nDate: 2026-03-10\nÉchéance: 2026-04-09\nDays Outstanding: 19\nBalance owing: 3,100.00 CAD\nRappel no 1 envoyé — aucune réponse",
+    "ground_truth": {
+      "document_type": "client_invoice",
+      "routing_signal": "to_ar"
+    }
+  },
+  {
+    "id": "ING-016",
+    "description": "Avis de cotisation — Agence du revenu fictive",
+    "content": "AGENCE DU REVENU DU QUÉBEC (FICTIF)\nAvis de cotisation\nNuméro de référence: ARC-QC-2026-7741\nPériode visée: Année fiscale 2025\nMontant établi: 12,450.00 CAD\nDate limite de paiement: 2026-05-31\nObjet: Cotisation annuelle — impôt société",
+    "ground_truth": {
+      "document_type": "tax_document",
+      "routing_signal": "to_compliance"
+    }
+  },
+  {
+    "id": "ING-017",
+    "description": "Déclaration de revenus TPS/TVQ 2026",
+    "content": "DÉCLARATION DE REVENUS\nPériode de déclaration: T1 2026 (jan–mar)\nNuméro d'inscription TPS: 123456789 RT0001\nNuméro d'inscription TVQ: 1234567890 TQ0001\nTPS collectée: 2,340.00 | TPS remboursée: 890.00 | TPS nette: 1,450.00\nTVQ collectée: 4,665.30 | TVQ remboursée: 1,774.25 | TVQ nette: 2,891.05\nTotal à remettre: 4,341.05 CAD avant le 2026-04-30",
+    "ground_truth": {
+      "document_type": "tax_document",
+      "routing_signal": "to_compliance"
+    }
+  },
+  {
+    "id": "ING-018",
+    "description": "Relevé de compte fiscal Revenu Québec",
+    "content": "REVENU QUÉBEC — RELEVÉ DE COMPTE FISCAL (FICTIF)\nContribuable: 9876543 Québec inc.\nDate du relevé: 2026-03-31\nSolde du compte: 3,200.00 CAD (débiteur)\nDétail: Retenues à la source — période mars 2026\nRéférence: RQ-2026-RS-44210\nEchéance prochaine: 2026-04-15",
+    "ground_truth": {
+      "document_type": "tax_document",
+      "routing_signal": "to_compliance"
+    }
+  },
+  {
+    "id": "ING-019",
+    "description": "Avis de remise — déductions à la source",
+    "content": "AVIS DE REMISE\nEmployeur: 1234567 Canada inc.\nPériode de paie: Mars 2026\nDéductions à la source:\n  Impôt fédéral retenu: 4,120.00 CAD\n  Impôt provincial retenu: 5,310.00 CAD\n  Cotisations RRQ: 890.00 CAD\n  Cotisations RQAP: 212.50 CAD\nTotal à remettre: 10,532.50 CAD\nDate limite: 2026-04-15",
+    "ground_truth": {
+      "document_type": "tax_document",
+      "routing_signal": "to_compliance"
+    }
+  },
+  {
+    "id": "ING-020",
+    "description": "Confirmation de dépôt de déclaration fiscale",
+    "content": "CONFIRMATION DE DÉPÔT\nAgence du revenu du Canada (fictif)\nNuméro de confirmation: CRA-2026-C-88901\nDate de réception: 2026-04-10\nType: Déclaration T2 — Impôt des sociétés\nExercice: 1er janvier 2025 au 31 décembre 2025\nStatut: REÇUE ET EN TRAITEMENT\nAucun montant dû à ce stade",
+    "ground_truth": {
+      "document_type": "tax_document",
+      "routing_signal": "to_compliance"
+    }
+  },
+  {
+    "id": "ING-021",
+    "description": "Fiche client — Société Beaumont Conseils inc.",
+    "content": "FICHE CLIENT\nNom: Société Beaumont Conseils inc.\nForme juridique: Société par actions (Québec)\nAdresse: 102 rue du Parc, Québec (QC) G1S 4R7\nCourriel: info@beaumontconseils.qc.ca\nFin d'exercice fiscal: 31 décembre\nNuméro d'entreprise: 123456789\nReprésentant: Jean-Marc Beaumont",
+    "ground_truth": {
+      "document_type": "onboarding_form",
+      "routing_signal": "to_onboarding"
+    }
+  },
+  {
+    "id": "ING-022",
+    "description": "Mandat d'engagement — Innovatech Solutions ltée",
+    "content": "MANDAT D'ENGAGEMENT\nClient: Innovatech Solutions ltée\nForme juridique: Société à responsabilité limitée\nAdresse: 55 avenue Laurier, Montréal (QC) H2T 2N9\nCourriel: cfo@innovatechsolutions.ca\nFin d'exercice: 31 mars\nNEQ: 987654321\nTaxes: Inscrit TPS/TVQ\nDate d'entrée en vigueur: 2026-04-01",
+    "ground_truth": {
+      "document_type": "onboarding_form",
+      "routing_signal": "to_onboarding"
+    }
+  },
+  {
+    "id": "ING-023",
+    "description": "Fiche client — Transport Lebrun & Frères enr.",
+    "content": "FICHE CLIENT\nNom: Transport Lebrun & Frères enr.\nForme juridique: Société en nom collectif\nAdresse: 78 route Industrielle, Drummondville (QC) J2C 3A1\nContact principal: Marie-Ève Lebrun\nCourriel: melebrun@transportlebrun.com\nExercice fiscal: 1er juillet au 30 juin\nNo d'entreprise: 456789123",
+    "ground_truth": {
+      "document_type": "onboarding_form",
+      "routing_signal": "to_onboarding"
+    }
+  },
+  {
+    "id": "ING-024",
+    "description": "Mandat d'engagement — Clinique Vétérinaire Saindon",
+    "content": "MANDAT D'ENGAGEMENT\nNom du client: Clinique Vétérinaire Saindon inc.\nForme légale: Société par actions provinciale\nAdresse: 221 boulevard des Prairies, Longueuil (QC) J4G 2V8\nCourriel: admin@cliniquesaindon.ca\nFin d'exercice fiscal: 31 août\nNuméro d'entreprise: 321654987\nInscription GST/QST: en attente de validation",
+    "ground_truth": {
+      "document_type": "onboarding_form",
+      "routing_signal": "to_onboarding"
+    }
+  },
+  {
+    "id": "ING-025",
+    "description": "Fiche client — Groupe Immobilier Fontaine inc.",
+    "content": "FICHE CLIENT\nNom: Groupe Immobilier Fontaine inc.\nForme juridique: Société par actions fédérale\nAdresse: 1010 rue du Commerce, Gatineau (QC) J8Y 5M4\nCourriel: gestion@fonttaineimmo.ca\nFin d'exercice: 31 octobre\nNEQ: 654321890\nDate d'ouverture du dossier: 2026-04-15",
+    "ground_truth": {
+      "document_type": "onboarding_form",
+      "routing_signal": "to_onboarding"
+    }
+  },
+  {
+    "id": "ING-026",
+    "description": "Lettre personnelle — non financière",
+    "content": "Montréal, le 15 mars 2026\n\nChère Isabelle,\n\nJ'espère que tu vas bien. Ça fait tellement longtemps qu'on ne s'est pas vus!\nJ'ai pensé à toi la semaine dernière quand je suis passé devant ton ancien appartement.\nOn devrait se voir pour prendre un café bientôt.\n\nÀ bientôt,\nPierre",
+    "ground_truth": {
+      "document_type": "unrecognized",
+      "routing_signal": "unrecognized"
+    }
+  },
+  {
+    "id": "ING-027",
+    "description": "Courriel marketing en anglais",
+    "content": "Subject: Exclusive offer — Don't miss out!\n\nDear Valued Customer,\n\nWe are thrilled to announce our Spring Sale with up to 50% off all products!\nThis limited-time offer expires April 30th.\nClick here to redeem your discount code: SPRING2026\n\nUnsubscribe | Privacy Policy | Contact Us\nMarketing Solutions Corp.",
+    "ground_truth": {
+      "document_type": "unrecognized",
+      "routing_signal": "unrecognized"
+    }
+  },
+  {
+    "id": "ING-028",
+    "description": "Description d'image numérisée sans données financières",
+    "content": "IMAGE NUMÉRISÉE — QUALITÉ FAIBLE\nFichier: scan_20260318_142301.pdf\nPages: 1\nRésolution: 72 dpi\nTexte extrait: [illisible]\nAucune donnée structurée détectée\nAucun montant, numéro de facture ou référence comptable identifié\nAction suggérée: révision manuelle requise",
+    "ground_truth": {
+      "document_type": "unrecognized",
+      "routing_signal": "unrecognized"
+    }
+  },
+  {
+    "id": "ING-029",
+    "description": "Notes de réunion interne — aucune structure financière",
+    "content": "RÉUNION D'ÉQUIPE — 20 mars 2026\nParticipants: Sophie, Marc, Julien, Amélie\nPoints discutés:\n1. Mise à jour sur le projet de refonte du site web\n2. Planification des vacances d'été\n3. Nouveau processus de demande de congé\nProchaine réunion: 3 avril 2026\nNote: apporter les dossiers de ressources humaines",
+    "ground_truth": {
+      "document_type": "unrecognized",
+      "routing_signal": "unrecognized"
+    }
+  },
+  {
+    "id": "ING-030",
+    "description": "Document mixte bilingue sans structure financière",
+    "content": "MEMO / NOTE DE SERVICE\nDe: Direction générale / From: General Management\nÀ tous / To all staff\nObjet / Subject: Office relocation update\n\nNous souhaitons vous informer / We would like to inform you\nque les bureaux seront déplacés / that offices will be relocated\nau 5e étage / to the 5th floor\nen avril prochain / next April.\n\nMerci / Thank you.",
+    "ground_truth": {
+      "document_type": "unrecognized",
+      "routing_signal": "unrecognized"
+    }
+  }
+]

@@ -37,18 +37,48 @@ from accounting_agents.state import (
 
 # ── Classification ───────────────────────────────────────────────
 
-CLASSIFICATION_RULES: list[tuple[DocumentType, list[str]]] = [
-    (
-        "supplier_invoice",
-        ["facture", "invoice", "fournisseur", "vendor", "montant dû", "amount due"],
-    ),
+CLASSIFICATION_RULES: list[tuple[str, list[str]]] = [
     (
         "bank_statement",
         ["relevé", "statement", "solde", "balance", "bancaire", "bank"],
     ),
     (
+        "client_invoice",
+        [
+            "facture client", "compte client", "solde dû", "solde du",
+            "jours en souffrance", "en souffrance", "overdue",
+            "days outstanding", "montant échu", "montant echu",
+            "date d'échéance", "date d'echeance",
+        ],
+    ),
+    (
+        "supplier_invoice",
+        ["facture", "invoice", "fournisseur", "vendor", "montant dû", "amount due"],
+    ),
+    (
         "receipt",
         ["reçu", "receipt", "paiement reçu", "payment received"],
+    ),
+    (
+        "tax_document",
+        [
+            "avis de cotisation", "déclaration de revenus",
+            "declaration de revenus", "relevé fiscal", "releve fiscal",
+            "avis de remise", "confirmation de dépôt",
+            "confirmation de depot", "référence fiscale",
+            "reference fiscale", "déclaration fiscale",
+            "declaration fiscale",
+        ],
+    ),
+    (
+        "onboarding_form",
+        [
+            "fiche client", "mandat d'engagement", "lettre de mandat",
+            "forme juridique", "numéro d'entreprise",
+            "numero d'entreprise", "fin d'exercice",
+            "fin d exercice", "nouvel engagement", "nouveau client",
+            "profil client",
+        ],
     ),
 ]
 
@@ -261,7 +291,15 @@ def ingestion_node(state: AccountingAgentsState) -> dict:
     print(f"[ingestion_node] Vendor: {vendor} | Amount: ${amount:,.2f} CAD")
     print(f"[ingestion_node] Document number: {doc_number} | Date: {date}")
 
-    routing_signal = "to_ap" if doc_type == "supplier_invoice" else "to_reconciliation"
+    _routing_map = {
+        "supplier_invoice": "to_ap",
+        "client_invoice": "to_ar",
+        "bank_statement": "to_reconciliation",
+        "receipt": "to_reconciliation",
+        "tax_document": "to_compliance",
+        "onboarding_form": "to_onboarding",
+    }
+    routing_signal = _routing_map.get(doc_type, "to_reconciliation")
 
     return {
         "documents_ingested": existing_docs,

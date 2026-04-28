@@ -1,0 +1,689 @@
+{
+  "generated_at": "2026-04-28T17:41:06",
+  "agents": {
+    "ingestion": {
+      "agent": "ingestion",
+      "results": [
+        {
+          "id": "ING-001",
+          "description": "Relev\u00e9 bancaire Banque Nationale mars 2026",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "bank_statement",
+          "expected_routing": "to_reconciliation",
+          "correct": true
+        },
+        {
+          "id": "ING-002",
+          "description": "Relev\u00e9 bancaire TD Canada Trust f\u00e9vrier 2026",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "bank_statement",
+          "expected_routing": "to_reconciliation",
+          "correct": true
+        },
+        {
+          "id": "ING-003",
+          "description": "Relev\u00e9 bancaire Desjardins janvier 2026",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "bank_statement",
+          "expected_routing": "to_reconciliation",
+          "correct": true
+        },
+        {
+          "id": "ING-004",
+          "description": "Relev\u00e9 bancaire BMO mars 2026",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "bank_statement",
+          "expected_routing": "to_reconciliation",
+          "correct": true
+        },
+        {
+          "id": "ING-005",
+          "description": "Relev\u00e9 bancaire RBC f\u00e9vrier 2026",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "bank_statement",
+          "expected_routing": "to_reconciliation",
+          "correct": true
+        },
+        {
+          "id": "ING-006",
+          "description": "Facture fournisseur Les Fournitures Dumont inc.",
+          "predicted_doc_type": "supplier_invoice",
+          "predicted_routing": "to_ap",
+          "expected_doc_type": "supplier_invoice",
+          "expected_routing": "to_ap",
+          "correct": true
+        },
+        {
+          "id": "ING-007",
+          "description": "Facture fournisseur Services TechNord lt\u00e9e",
+          "predicted_doc_type": "supplier_invoice",
+          "predicted_routing": "to_ap",
+          "expected_doc_type": "supplier_invoice",
+          "expected_routing": "to_ap",
+          "correct": true
+        },
+        {
+          "id": "ING-008",
+          "description": "Facture fournisseur \u00c9quipements B\u00e9langer & Fils",
+          "predicted_doc_type": "supplier_invoice",
+          "predicted_routing": "to_ap",
+          "expected_doc_type": "supplier_invoice",
+          "expected_routing": "to_ap",
+          "correct": true
+        },
+        {
+          "id": "ING-009",
+          "description": "Facture fournisseur Papeterie C\u00f4t\u00e9 enr.",
+          "predicted_doc_type": "supplier_invoice",
+          "predicted_routing": "to_ap",
+          "expected_doc_type": "supplier_invoice",
+          "expected_routing": "to_ap",
+          "correct": true
+        },
+        {
+          "id": "ING-010",
+          "description": "Facture fournisseur Maintenance Gagnon 2020 inc.",
+          "predicted_doc_type": "supplier_invoice",
+          "predicted_routing": "to_ap",
+          "expected_doc_type": "supplier_invoice",
+          "expected_routing": "to_ap",
+          "correct": true
+        },
+        {
+          "id": "ING-011",
+          "description": "Compte client Gestion Tremblay inc. \u2014 facture en souffrance",
+          "predicted_doc_type": "client_invoice",
+          "predicted_routing": "to_ar",
+          "expected_doc_type": "client_invoice",
+          "expected_routing": "to_ar",
+          "correct": true
+        },
+        {
+          "id": "ING-012",
+          "description": "Compte client Construction Lefebvre lt\u00e9e",
+          "predicted_doc_type": "client_invoice",
+          "predicted_routing": "to_ar",
+          "expected_doc_type": "client_invoice",
+          "expected_routing": "to_ar",
+          "correct": true
+        },
+        {
+          "id": "ING-013",
+          "description": "Facture client Transport Bergeron & Associ\u00e9s",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "client_invoice",
+          "expected_routing": "to_ar",
+          "correct": false
+        },
+        {
+          "id": "ING-014",
+          "description": "Compte client Clinique M\u00e9dicale Fortin",
+          "predicted_doc_type": "client_invoice",
+          "predicted_routing": "to_ar",
+          "expected_doc_type": "client_invoice",
+          "expected_routing": "to_ar",
+          "correct": true
+        },
+        {
+          "id": "ING-015",
+          "description": "Facture client Immobilier Paquette inc.",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "client_invoice",
+          "expected_routing": "to_ar",
+          "correct": false
+        },
+        {
+          "id": "ING-016",
+          "description": "Avis de cotisation \u2014 Agence du revenu fictive",
+          "predicted_doc_type": "tax_document",
+          "predicted_routing": "to_compliance",
+          "expected_doc_type": "tax_document",
+          "expected_routing": "to_compliance",
+          "correct": true
+        },
+        {
+          "id": "ING-017",
+          "description": "D\u00e9claration de revenus TPS/TVQ 2026",
+          "predicted_doc_type": "tax_document",
+          "predicted_routing": "to_compliance",
+          "expected_doc_type": "tax_document",
+          "expected_routing": "to_compliance",
+          "correct": true
+        },
+        {
+          "id": "ING-018",
+          "description": "Relev\u00e9 de compte fiscal Revenu Qu\u00e9bec",
+          "predicted_doc_type": "bank_statement",
+          "predicted_routing": "to_reconciliation",
+          "expected_doc_type": "tax_document",
+          "expected_routing": "to_compliance",
+          "correct": false
+        },
+        {
+          "id": "ING-019",
+          "description": "Avis de remise \u2014 d\u00e9ductions \u00e0 la source",
+          "predicted_doc_type": "tax_document",
+          "predicted_routing": "to_compliance",
+          "expected_doc_type": "tax_document",
+          "expected_routing": "to_compliance",
+          "correct": true
+        },
+        {
+          "id": "ING-020",
+          "description": "Confirmation de d\u00e9p\u00f4t de d\u00e9claration fiscale",
+          "predicted_doc_type": "supplier_invoice",
+          "predicted_routing": "to_ap",
+          "expected_doc_type": "tax_document",
+          "expected_routing": "to_compliance",
+          "correct": false
+        },
+        {
+          "id": "ING-021",
+          "description": "Fiche client \u2014 Soci\u00e9t\u00e9 Beaumont Conseils inc.",
+          "predicted_doc_type": "onboarding_form",
+          "predicted_routing": "to_onboarding",
+          "expected_doc_type": "onboarding_form",
+          "expected_routing": "to_onboarding",
+          "correct": true
+        },
+        {
+          "id": "ING-022",
+          "description": "Mandat d'engagement \u2014 Innovatech Solutions lt\u00e9e",
+          "predicted_doc_type": "onboarding_form",
+          "predicted_routing": "to_onboarding",
+          "expected_doc_type": "onboarding_form",
+          "expected_routing": "to_onboarding",
+          "correct": true
+        },
+        {
+          "id": "ING-023",
+          "description": "Fiche client \u2014 Transport Lebrun & Fr\u00e8res enr.",
+          "predicted_doc_type": "onboarding_form",
+          "predicted_routing": "to_onboarding",
+          "expected_doc_type": "onboarding_form",
+          "expected_routing": "to_onboarding",
+          "correct": true
+        },
+        {
+          "id": "ING-024",
+          "description": "Mandat d'engagement \u2014 Clinique V\u00e9t\u00e9rinaire Saindon",
+          "predicted_doc_type": "onboarding_form",
+          "predicted_routing": "to_onboarding",
+          "expected_doc_type": "onboarding_form",
+          "expected_routing": "to_onboarding",
+          "correct": true
+        },
+        {
+          "id": "ING-025",
+          "description": "Fiche client \u2014 Groupe Immobilier Fontaine inc.",
+          "predicted_doc_type": "onboarding_form",
+          "predicted_routing": "to_onboarding",
+          "expected_doc_type": "onboarding_form",
+          "expected_routing": "to_onboarding",
+          "correct": true
+        },
+        {
+          "id": "ING-026",
+          "description": "Lettre personnelle \u2014 non financi\u00e8re",
+          "predicted_doc_type": "unrecognized",
+          "predicted_routing": "unrecognized",
+          "expected_doc_type": "unrecognized",
+          "expected_routing": "unrecognized",
+          "correct": true
+        },
+        {
+          "id": "ING-027",
+          "description": "Courriel marketing en anglais",
+          "predicted_doc_type": "unrecognized",
+          "predicted_routing": "unrecognized",
+          "expected_doc_type": "unrecognized",
+          "expected_routing": "unrecognized",
+          "correct": true
+        },
+        {
+          "id": "ING-028",
+          "description": "Description d'image num\u00e9ris\u00e9e sans donn\u00e9es financi\u00e8res",
+          "predicted_doc_type": "supplier_invoice",
+          "predicted_routing": "to_ap",
+          "expected_doc_type": "unrecognized",
+          "expected_routing": "unrecognized",
+          "correct": false
+        },
+        {
+          "id": "ING-029",
+          "description": "Notes de r\u00e9union interne \u2014 aucune structure financi\u00e8re",
+          "predicted_doc_type": "unrecognized",
+          "predicted_routing": "unrecognized",
+          "expected_doc_type": "unrecognized",
+          "expected_routing": "unrecognized",
+          "correct": true
+        },
+        {
+          "id": "ING-030",
+          "description": "Document mixte bilingue sans structure financi\u00e8re",
+          "predicted_doc_type": "unrecognized",
+          "predicted_routing": "unrecognized",
+          "expected_doc_type": "unrecognized",
+          "expected_routing": "unrecognized",
+          "correct": true
+        }
+      ],
+      "total": 30,
+      "correct": 25,
+      "routing_correct": 25,
+      "accuracy": 0.8333,
+      "per_class": {
+        "bank_statement": {
+          "precision": 0.625,
+          "recall": 1.0,
+          "f1": 0.769
+        },
+        "supplier_invoice": {
+          "precision": 0.714,
+          "recall": 1.0,
+          "f1": 0.833
+        },
+        "client_invoice": {
+          "precision": 1.0,
+          "recall": 0.6,
+          "f1": 0.75
+        },
+        "tax_document": {
+          "precision": 1.0,
+          "recall": 0.6,
+          "f1": 0.75
+        },
+        "onboarding_form": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "unrecognized": {
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.889
+        }
+      }
+    },
+    "reconciliation": {
+      "agent": "reconciliation",
+      "results": [
+        {
+          "id": "REC-001",
+          "description": "Clean match \u2014 no gap, Hydro-Qu\u00e9bec + Bell Canada",
+          "predicted_routing": "completed",
+          "predicted_gap": 0,
+          "expected_routing": "completed",
+          "expected_gap": 0.0,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-002",
+          "description": "Clean match \u2014 no gap, Services TechNord + Papeterie C\u00f4t\u00e9",
+          "predicted_routing": "completed",
+          "predicted_gap": 0,
+          "expected_routing": "completed",
+          "expected_gap": 0.0,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-003",
+          "description": "Clean match \u2014 no gap, \u00c9quipements B\u00e9langer seul",
+          "predicted_routing": "completed",
+          "predicted_gap": 0,
+          "expected_routing": "completed",
+          "expected_gap": 0.0,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-004",
+          "description": "Clean match \u2014 no gap, trois fournisseurs",
+          "predicted_routing": "completed",
+          "predicted_gap": 0,
+          "expected_routing": "completed",
+          "expected_gap": 0.0,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-005",
+          "description": "Clean match \u2014 no gap, Bell Canada seul",
+          "predicted_routing": "completed",
+          "predicted_gap": 0,
+          "expected_routing": "completed",
+          "expected_gap": 0.0,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-006",
+          "description": "Gap mineur $45.00 CAD \u2014 N1 automatique",
+          "predicted_routing": "completed",
+          "predicted_gap": 45.0,
+          "expected_routing": "completed",
+          "expected_gap": 45.0,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-007",
+          "description": "Gap mineur $128.75 CAD \u2014 N1 automatique",
+          "predicted_routing": "completed",
+          "predicted_gap": 128.75,
+          "expected_routing": "completed",
+          "expected_gap": 128.75,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-008",
+          "description": "Gap mineur $310.00 CAD \u2014 N1 automatique",
+          "predicted_routing": "completed",
+          "predicted_gap": 310.0,
+          "expected_routing": "completed",
+          "expected_gap": 310.0,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-009",
+          "description": "Gap mineur $499.99 CAD \u2014 N1 automatique (limite basse N2)",
+          "predicted_routing": "completed",
+          "predicted_gap": 499.99,
+          "expected_routing": "completed",
+          "expected_gap": 499.99,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-010",
+          "description": "Gap mineur $212.40 CAD \u2014 N1 automatique",
+          "predicted_routing": "completed",
+          "predicted_gap": 212.4,
+          "expected_routing": "completed",
+          "expected_gap": 212.4,
+          "expected_escalation": "N1",
+          "correct": true
+        },
+        {
+          "id": "REC-011",
+          "description": "Gap important $2,100.00 CAD \u2014 N3 escalade HITL",
+          "predicted_routing": "hitl_pending",
+          "predicted_gap": 2100.0,
+          "expected_routing": "hitl_pending",
+          "expected_gap": 2100.0,
+          "expected_escalation": "N3",
+          "correct": true
+        },
+        {
+          "id": "REC-012",
+          "description": "Gap important $3,450.75 CAD \u2014 N3 escalade HITL",
+          "predicted_routing": "hitl_pending",
+          "predicted_gap": 3450.75,
+          "expected_routing": "hitl_pending",
+          "expected_gap": 3450.75,
+          "expected_escalation": "N3",
+          "correct": true
+        },
+        {
+          "id": "REC-013",
+          "description": "Gap important $5,200.00 CAD \u2014 N3 escalade HITL",
+          "predicted_routing": "hitl_pending",
+          "predicted_gap": 5200.0,
+          "expected_routing": "hitl_pending",
+          "expected_gap": 5200.0,
+          "expected_escalation": "N3",
+          "correct": true
+        },
+        {
+          "id": "REC-014",
+          "description": "Gap important $8,900.25 CAD \u2014 N3 escalade HITL",
+          "predicted_routing": "hitl_pending",
+          "predicted_gap": 8900.25,
+          "expected_routing": "hitl_pending",
+          "expected_gap": 8900.25,
+          "expected_escalation": "N3",
+          "correct": true
+        },
+        {
+          "id": "REC-015",
+          "description": "Gap limite $2,001.00 CAD \u2014 N3 escalade HITL",
+          "predicted_routing": "hitl_pending",
+          "predicted_gap": 2001.0,
+          "expected_routing": "hitl_pending",
+          "expected_gap": 2001.0,
+          "expected_escalation": "N3",
+          "correct": true
+        }
+      ],
+      "total": 15,
+      "correct": 15,
+      "accuracy": 1.0,
+      "gap_mae": 0.0
+    },
+    "ap": {
+      "agent": "ap",
+      "results": [
+        {
+          "id": "AP-001",
+          "description": "Known vendor, amount $142.50 < $500 \u2014 auto-approve N1",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N1",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-002",
+          "description": "Known vendor, amount $89.00 < $500 \u2014 auto-approve N1",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N1",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-003",
+          "description": "Known vendor Bell Canada, amount $445.75 < $500 \u2014 auto-approve N1",
+          "predicted_escalation": "N1",
+          "predicted_routing": "completed",
+          "expected_escalation": "N1",
+          "expected_routing": "completed",
+          "correct": true
+        },
+        {
+          "id": "AP-004",
+          "description": "Known vendor Hydro-Qu\u00e9bec, amount $320.00 < $500 \u2014 auto-approve N1",
+          "predicted_escalation": "N1",
+          "predicted_routing": "completed",
+          "expected_escalation": "N1",
+          "expected_routing": "completed",
+          "correct": true
+        },
+        {
+          "id": "AP-005",
+          "description": "Known vendor, amount $199.99 < $500 \u2014 auto-approve N1",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N1",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-006",
+          "description": "Known vendor, amount $650.00 ($500\u2013$2000) \u2014 notify N2",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N2",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-007",
+          "description": "Known vendor, amount $1,200.75 ($500\u2013$2000) \u2014 notify N2",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N2",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-008",
+          "description": "Known vendor, amount $875.00 ($500\u2013$2000) \u2014 notify N2",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N2",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-009",
+          "description": "Known vendor, amount $1,950.00 ($500\u2013$2000) \u2014 notify N2",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N2",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-010",
+          "description": "Known vendor, amount $543.20 ($500\u2013$2000) \u2014 notify N2",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N2",
+          "expected_routing": "completed",
+          "correct": false
+        },
+        {
+          "id": "AP-011",
+          "description": "Known vendor Hydro-Qu\u00e9bec, amount $2,450.00 > $2000 \u2014 HITL N3",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N3",
+          "expected_routing": "hitl_pending",
+          "correct": true
+        },
+        {
+          "id": "AP-012",
+          "description": "Known vendor, amount $3,800.75 > $2000 \u2014 HITL N3",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N3",
+          "expected_routing": "hitl_pending",
+          "correct": true
+        },
+        {
+          "id": "AP-013",
+          "description": "Known vendor, amount $5,100.00 > $2000 \u2014 HITL N3",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N3",
+          "expected_routing": "hitl_pending",
+          "correct": true
+        },
+        {
+          "id": "AP-014",
+          "description": "Known vendor Bell Canada, amount $2,001.00 > $2000 (limite) \u2014 HITL N3",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N3",
+          "expected_routing": "hitl_pending",
+          "correct": true
+        },
+        {
+          "id": "AP-015",
+          "description": "Known vendor, amount $9,800.00 > $2000 \u2014 HITL N3",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N3",
+          "expected_routing": "hitl_pending",
+          "correct": true
+        },
+        {
+          "id": "AP-016",
+          "description": "Unknown vendor Fournisseur Inconnu XYZ \u2014 N4 transfer",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N4",
+          "expected_routing": "unrecognized",
+          "correct": false
+        },
+        {
+          "id": "AP-017",
+          "description": "Unknown vendor Import Export 9999 inc. \u2014 N4 transfer",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N4",
+          "expected_routing": "unrecognized",
+          "correct": false
+        },
+        {
+          "id": "AP-018",
+          "description": "Unknown vendor Consulting Unknown LLC \u2014 N4 transfer",
+          "predicted_escalation": "N3",
+          "predicted_routing": "hitl_pending",
+          "expected_escalation": "N4",
+          "expected_routing": "unrecognized",
+          "correct": false
+        },
+        {
+          "id": "AP-019",
+          "description": "Duplicate bill \u2014 same as AP-001 (Papeterie C\u00f4t\u00e9, $142.50, 2026-03-10) \u2014 N4",
+          "predicted_escalation": "N1",
+          "predicted_routing": "duplicate_bill",
+          "expected_escalation": "N4",
+          "expected_routing": "duplicate_bill",
+          "correct": false
+        },
+        {
+          "id": "AP-020",
+          "description": "Duplicate bill \u2014 same as AP-006 (Maintenance Gagnon, $650.00, 2026-03-10) \u2014 N4",
+          "predicted_escalation": "N1",
+          "predicted_routing": "duplicate_bill",
+          "expected_escalation": "N4",
+          "expected_routing": "duplicate_bill",
+          "correct": false
+        }
+      ],
+      "total": 20,
+      "correct": 7,
+      "accuracy": 0.35,
+      "confusion": {
+        "N1": {
+          "N1": 2,
+          "N2": 0,
+          "N3": 0,
+          "N4": 2
+        },
+        "N2": {
+          "N1": 0,
+          "N2": 0,
+          "N3": 0,
+          "N4": 0
+        },
+        "N3": {
+          "N1": 3,
+          "N2": 5,
+          "N3": 5,
+          "N4": 3
+        },
+        "N4": {
+          "N1": 0,
+          "N2": 0,
+          "N3": 0,
+          "N4": 0
+        }
+      }
+    }
+  }
+}

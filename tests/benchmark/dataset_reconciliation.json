@@ -1,0 +1,235 @@
+[
+  {
+    "id": "REC-001",
+    "description": "Clean match — no gap, Hydro-Québec + Bell Canada",
+    "bank_transactions": [
+      {"date": "2026-03-15", "description": "Hydro-Québec", "amount": 320.00},
+      {"date": "2026-03-18", "description": "Bell Canada", "amount": 185.50}
+    ],
+    "qbo_bills": [
+      {"vendor": "Hydro-Québec", "amount": 320.00, "date": "2026-03-15"},
+      {"vendor": "Bell Canada", "amount": 185.50, "date": "2026-03-18"}
+    ],
+    "ground_truth": {
+      "gap_amount": 0.00,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-002",
+    "description": "Clean match — no gap, Services TechNord + Papeterie Côté",
+    "bank_transactions": [
+      {"date": "2026-03-10", "description": "Services TechNord ltée", "amount": 1200.00},
+      {"date": "2026-03-12", "description": "Papeterie Côté enr.", "amount": 332.32}
+    ],
+    "qbo_bills": [
+      {"vendor": "Services TechNord ltée", "amount": 1200.00, "date": "2026-03-10"},
+      {"vendor": "Papeterie Côté enr.", "amount": 332.32, "date": "2026-03-12"}
+    ],
+    "ground_truth": {
+      "gap_amount": 0.00,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-003",
+    "description": "Clean match — no gap, Équipements Bélanger seul",
+    "bank_transactions": [
+      {"date": "2026-03-20", "description": "Équipements Bélanger & Fils", "amount": 3800.75}
+    ],
+    "qbo_bills": [
+      {"vendor": "Équipements Bélanger & Fils", "amount": 3800.75, "date": "2026-03-20"}
+    ],
+    "ground_truth": {
+      "gap_amount": 0.00,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-004",
+    "description": "Clean match — no gap, trois fournisseurs",
+    "bank_transactions": [
+      {"date": "2026-02-05", "description": "Maintenance Gagnon 2020 inc.", "amount": 2414.48},
+      {"date": "2026-02-10", "description": "Les Fournitures Dumont inc.", "amount": 548.75},
+      {"date": "2026-02-14", "description": "Hydro-Québec", "amount": 420.00}
+    ],
+    "qbo_bills": [
+      {"vendor": "Maintenance Gagnon 2020 inc.", "amount": 2414.48, "date": "2026-02-05"},
+      {"vendor": "Les Fournitures Dumont inc.", "amount": 548.75, "date": "2026-02-10"},
+      {"vendor": "Hydro-Québec", "amount": 420.00, "date": "2026-02-14"}
+    ],
+    "ground_truth": {
+      "gap_amount": 0.00,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-005",
+    "description": "Clean match — no gap, Bell Canada seul",
+    "bank_transactions": [
+      {"date": "2026-01-18", "description": "Bell Canada", "amount": 210.00}
+    ],
+    "qbo_bills": [
+      {"vendor": "Bell Canada", "amount": 210.00, "date": "2026-01-18"}
+    ],
+    "ground_truth": {
+      "gap_amount": 0.00,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-006",
+    "description": "Gap mineur $45.00 CAD — N1 automatique",
+    "bank_transactions": [
+      {"date": "2026-03-05", "description": "Papeterie Côté enr.", "amount": 377.32}
+    ],
+    "qbo_bills": [
+      {"vendor": "Papeterie Côté enr.", "amount": 332.32, "date": "2026-03-05"}
+    ],
+    "ground_truth": {
+      "gap_amount": 45.00,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-007",
+    "description": "Gap mineur $128.75 CAD — N1 automatique",
+    "bank_transactions": [
+      {"date": "2026-02-20", "description": "Services TechNord ltée", "amount": 1328.75}
+    ],
+    "qbo_bills": [
+      {"vendor": "Services TechNord ltée", "amount": 1200.00, "date": "2026-02-20"}
+    ],
+    "ground_truth": {
+      "gap_amount": 128.75,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-008",
+    "description": "Gap mineur $310.00 CAD — N1 automatique",
+    "bank_transactions": [
+      {"date": "2026-01-12", "description": "Hydro-Québec", "amount": 630.00}
+    ],
+    "qbo_bills": [
+      {"vendor": "Hydro-Québec", "amount": 320.00, "date": "2026-01-12"}
+    ],
+    "ground_truth": {
+      "gap_amount": 310.00,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-009",
+    "description": "Gap mineur $499.99 CAD — N1 automatique (limite basse N2)",
+    "bank_transactions": [
+      {"date": "2026-03-28", "description": "Les Fournitures Dumont inc.", "amount": 1048.74}
+    ],
+    "qbo_bills": [
+      {"vendor": "Les Fournitures Dumont inc.", "amount": 548.75, "date": "2026-03-28"}
+    ],
+    "ground_truth": {
+      "gap_amount": 499.99,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-010",
+    "description": "Gap mineur $212.40 CAD — N1 automatique",
+    "bank_transactions": [
+      {"date": "2026-02-08", "description": "Bell Canada", "amount": 397.90}
+    ],
+    "qbo_bills": [
+      {"vendor": "Bell Canada", "amount": 185.50, "date": "2026-02-08"}
+    ],
+    "ground_truth": {
+      "gap_amount": 212.40,
+      "escalation_level": "N1",
+      "routing_signal": "completed"
+    }
+  },
+  {
+    "id": "REC-011",
+    "description": "Gap important $2,100.00 CAD — N3 escalade HITL",
+    "bank_transactions": [
+      {"date": "2026-03-15", "description": "Maintenance Gagnon 2020 inc.", "amount": 4514.48}
+    ],
+    "qbo_bills": [
+      {"vendor": "Maintenance Gagnon 2020 inc.", "amount": 2414.48, "date": "2026-03-15"}
+    ],
+    "ground_truth": {
+      "gap_amount": 2100.00,
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "REC-012",
+    "description": "Gap important $3,450.75 CAD — N3 escalade HITL",
+    "bank_transactions": [
+      {"date": "2026-02-22", "description": "Équipements Bélanger & Fils", "amount": 7251.50}
+    ],
+    "qbo_bills": [
+      {"vendor": "Équipements Bélanger & Fils", "amount": 3800.75, "date": "2026-02-22"}
+    ],
+    "ground_truth": {
+      "gap_amount": 3450.75,
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "REC-013",
+    "description": "Gap important $5,200.00 CAD — N3 escalade HITL",
+    "bank_transactions": [
+      {"date": "2026-01-30", "description": "Services TechNord ltée", "amount": 6400.00}
+    ],
+    "qbo_bills": [
+      {"vendor": "Services TechNord ltée", "amount": 1200.00, "date": "2026-01-30"}
+    ],
+    "ground_truth": {
+      "gap_amount": 5200.00,
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "REC-014",
+    "description": "Gap important $8,900.25 CAD — N3 escalade HITL",
+    "bank_transactions": [
+      {"date": "2026-03-05", "description": "Hydro-Québec", "amount": 9220.25}
+    ],
+    "qbo_bills": [
+      {"vendor": "Hydro-Québec", "amount": 320.00, "date": "2026-03-05"}
+    ],
+    "ground_truth": {
+      "gap_amount": 8900.25,
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  },
+  {
+    "id": "REC-015",
+    "description": "Gap limite $2,001.00 CAD — N3 escalade HITL",
+    "bank_transactions": [
+      {"date": "2026-03-25", "description": "Les Fournitures Dumont inc.", "amount": 2549.75}
+    ],
+    "qbo_bills": [
+      {"vendor": "Les Fournitures Dumont inc.", "amount": 548.75, "date": "2026-03-25"}
+    ],
+    "ground_truth": {
+      "gap_amount": 2001.00,
+      "escalation_level": "N3",
+      "routing_signal": "hitl_pending"
+    }
+  }
+]
