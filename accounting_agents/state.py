@@ -9,6 +9,8 @@ RoutingSignal = Literal[
     "to_ap",               # UC01 → UC05 (supplier invoice path)
     "to_ar",               # Supervisor → UC04 (accounts receivable path)
     "to_reporting",        # Supervisor → UC06 (reporting path)
+    "to_compliance",       # Supervisor → compliance agent (Phase 4)
+    "to_onboarding",       # Supervisor → onboarding agent (Phase 4)
     "duplicate_bill",       # UC05: AP Agent detected a duplicate invoice
     "nothing_to_collect",   # UC04: no overdue AR invoices found
     "no_report_data",      # UC06: no reporting data available
@@ -98,6 +100,44 @@ class ARAgingBucket(TypedDict):
     total_cad: float    # total outstanding amount (CAD)
 
 
+class ComplianceItem(TypedDict):
+    obligation_type: str        # "gst_remittance" | "qst_remittance" |
+                                # "payroll_deductions" | "corporate_tax" |
+                                # "t4_filing" | "rl1_filing"
+    jurisdiction: str           # "QC" | "CA"
+    deadline: str               # ISO date "YYYY-MM-DD"
+    amount_due: Optional[float]
+    days_remaining: int
+    status: str                 # "ok" | "upcoming" | "urgent" | "overdue"
+    escalation_level: str       # "N1" | "N2" | "N3" | "N4"
+
+
+class ComplianceInput(TypedDict):
+    client_id: str
+    fiscal_period: str          # "YYYY-QN" or "YYYY"
+    jurisdiction: str           # "QC" | "CA" | "QC+CA"
+
+
+class OnboardingDraft(TypedDict):
+    client_name: str
+    qbo_customer_payload: dict
+    validation_errors: list[str]
+    escalation_level: str       # "N2" | "N4"
+    status: str                 # "draft_ready" | "validation_failed"
+
+
+class OnboardingInput(TypedDict):
+    client_name: str
+    legal_form: str             # "corporation" | "sole_proprietorship" | "partnership"
+    address: str
+    contact_email: str
+    fiscal_year_end: str        # "MM-DD"
+    jurisdiction: str           # "QC" | "CA" | "QC+CA"
+    neq: Optional[str]          # 9-digit Quebec enterprise number
+    gst_number: Optional[str]   # 9-digit + RT0001
+    qst_number: Optional[str]   # 10-digit + TQ0001
+
+
 class ReportData(TypedDict):
     period: str                 # reporting period — "YYYY-MM"
     revenue: float              # total revenue (CAD)
@@ -157,6 +197,30 @@ class AccountingAgentsState(TypedDict):
     ar_actions: list[ARAction]
     # Accounts receivable actions taken in this cycle.
     # Written by: AR Agent
+    # Read by: Supervisor, HITL notifier
+
+    # ── Compliance (Phase 4) ──────────────────────────────────────
+    compliance_input: Optional[ComplianceInput]
+    # Input parameters for the Compliance Agent.
+    # None → Compliance Agent uses built-in mock fixture
+    # Written by: test harness / external trigger
+    # Read by: Compliance Agent
+
+    compliance_results: list[ComplianceItem]
+    # Tax and regulatory obligations assessed in this cycle.
+    # Written by: Compliance Agent
+    # Read by: Supervisor, HITL notifier
+
+    # ── Onboarding (Phase 4) ──────────────────────────────────────
+    onboarding_input: Optional[OnboardingInput]
+    # Input parameters for the Onboarding Agent.
+    # None → Onboarding Agent uses built-in mock fixture
+    # Written by: test harness / external trigger
+    # Read by: Onboarding Agent
+
+    onboarding_draft: Optional[OnboardingDraft]
+    # Draft QBO customer record produced by the Onboarding Agent.
+    # Written by: Onboarding Agent
     # Read by: Supervisor, HITL notifier
 
     # ── Reporting (UC06) ──────────────────────────────────────────
@@ -225,6 +289,10 @@ def initial_state(thread_id: str) -> AccountingAgentsState:
         ap_actions=[],
         ar_invoices=None,
         ar_actions=[],
+        compliance_input=None,
+        compliance_results=[],
+        onboarding_input=None,
+        onboarding_draft=None,
         reporting_input=None,
         report_data=None,
         report_sent=False,

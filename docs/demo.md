@@ -129,7 +129,7 @@ After `graph.update_state()` injects the `hitl_decision`, the graph resumes from
 **Talking point for presenter:**
 > "From email arrival to approved reconciliation: under 2 minutes."
 >
-> "Today we validate the decision. In Phase 3, each decision automatically triggers the appropriate accounting actions. For example:
+> "Today each decision automatically triggers the appropriate accounting actions. For example:
 > - **APPROVE** → QBO is updated automatically, an audit note is created in the client file, and the Reporting Agent refreshes the P&L.
 > - **BLOCK** → the transaction is frozen in QBO, an investigation file is opened, and the Compliance Agent sends a regulatory alert if the amount exceeds the threshold.
 >
@@ -176,11 +176,10 @@ for any CPA firm. AccountingAgents addresses this at every layer:
 - Gmail OAuth2 scope is limited to `gmail.send` only —
   the agent can send notifications but cannot read the
   firm's inbox
-- Phase 3: Gmail read access will use `gmail.readonly`
-  scope (read-only, no modification possible). The firm's
-  data privacy policy will govern which emails the agent
-  is authorized to process and for how long attachments
-  are retained
+- Gmail read access will use `gmail.readonly` scope (read-only, no
+  modification possible) when inbox monitoring is activated. The firm's
+  data privacy policy will govern which emails the agent is authorized
+  to process and for how long attachments are retained.
 
 ### Human Oversight & Audit Trail
 - N1/N2/N3/N4 escalation model ensures no high-value action
@@ -203,12 +202,16 @@ for any CPA firm. AccountingAgents addresses this at every layer:
 
 ---
 
-## Phase 2 — Next Steps
+## Implementation Status
 
-| Feature | Description | Status |
-|---|---|---|
-| FastAPI webhook | Migrated from Flask — Pydantic Literal validation, uvicorn, 422 auto on invalid input | Done ✅ |
-| LLM classification | Hybrid keyword pre-filter + Pydantic AI Agent (LLM) on ambiguous docs. LLM-agnostic via CLASSIFICATION_MODEL in .env | Done ✅ |
-| AR Agent | Automated overdue invoice follow-up and escalation | Planned |
-| AP Agent | Vendor payment approval with N3 HITL gate | Planned |
-| Reporting Agent | P&L, cash flow, compliance deadline monitoring | Planned |
+| Phase | Feature                               | Status  |
+|-------|---------------------------------------|---------|
+| 2     | Gmail MCP real integration            | ✅ Done |
+| 2     | QBO MCP real integration              | ✅ Done |
+| 2     | FastAPI webhook + Pydantic validation  | ✅ Done |
+| 2     | LLM document classification           | ✅ Done |
+| 3     | AR Agent                              | ✅ Done |
+| 3     | AP Agent                              | ✅ Done |
+| 3     | Reporting Agent                       | ✅ Done |
+| 4     | Compliance Agent                      | ✅ Done |
+| 4     | Onboarding Agent                      | ✅ Done |

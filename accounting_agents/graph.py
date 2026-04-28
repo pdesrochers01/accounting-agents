@@ -8,6 +8,8 @@ from accounting_agents.nodes.hitl import hitl_node
 from accounting_agents.nodes.ap import ap_node
 from accounting_agents.nodes.ar import ar_node
 from accounting_agents.nodes.reporting import reporting_node
+from accounting_agents.nodes.compliance import compliance_node
+from accounting_agents.nodes.onboarding import onboarding_node
 from accounting_agents.routing import (
     route_after_ingestion,
     route_after_reconciliation,
@@ -15,6 +17,8 @@ from accounting_agents.routing import (
     route_after_ap,
     route_after_ar,
     route_after_reporting,
+    route_after_compliance,
+    route_after_onboarding,
 )
 
 
@@ -30,6 +34,8 @@ def build_graph(checkpointer: SqliteSaver):
     graph.add_node("ap", ap_node)
     graph.add_node("ar", ar_node)
     graph.add_node("reporting", reporting_node)
+    graph.add_node("compliance", compliance_node)
+    graph.add_node("onboarding", onboarding_node)
 
     # --- Edges ---
     graph.add_edge(START, "ingestion")
@@ -42,6 +48,8 @@ def build_graph(checkpointer: SqliteSaver):
             "ap": "ap",
             "ar": "ar",
             "reporting": "reporting",
+            "compliance": "compliance",
+            "onboarding": "onboarding",
             "end": END,
         }
     )
@@ -85,6 +93,24 @@ def build_graph(checkpointer: SqliteSaver):
     graph.add_conditional_edges(
         "reporting",
         route_after_reporting,
+        {
+            "hitl": "hitl",
+            "end": END,
+        }
+    )
+
+    graph.add_conditional_edges(
+        "compliance",
+        route_after_compliance,
+        {
+            "hitl": "hitl",
+            "end": END,
+        }
+    )
+
+    graph.add_conditional_edges(
+        "onboarding",
+        route_after_onboarding,
         {
             "hitl": "hitl",
             "end": END,

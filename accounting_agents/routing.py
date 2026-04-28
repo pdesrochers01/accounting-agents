@@ -12,6 +12,10 @@ def route_after_ingestion(state: AccountingAgentsState) -> str:
         return "ar"
     if signal == "to_reporting":
         return "reporting"
+    if signal == "to_compliance":
+        return "compliance"
+    if signal == "to_onboarding":
+        return "onboarding"
     # covers: "unrecognized", None, any error
     return "end"
 
@@ -49,6 +53,24 @@ def route_after_reconciliation(state: AccountingAgentsState) -> str:
     if signal == "hitl_pending":
         return "hitl"
     # covers: "completed", "nothing_to_reconcile"
+    return "end"
+
+
+def route_after_compliance(state: AccountingAgentsState) -> str:
+    """Route after compliance_node based on routing_signal."""
+    signal = state.get("routing_signal")
+    if signal == "hitl_pending":
+        return "hitl"
+    # covers: "completed" (N1 — all ok)
+    return "end"
+
+
+def route_after_onboarding(state: AccountingAgentsState) -> str:
+    """Route after onboarding_node based on routing_signal."""
+    signal = state.get("routing_signal")
+    if signal == "hitl_pending":
+        return "hitl"
+    # onboarding always routes to hitl (N2 or N4) — this is a safety fallback
     return "end"
 
 

@@ -35,17 +35,27 @@ HITL_MODE=mock
 ## Running Tests
 
 ```bash
-# All tests
-PYTHONPATH=. .venv/bin/python tests/test_ingestion.py
-PYTHONPATH=. .venv/bin/python tests/test_reconciliation.py
-PYTHONPATH=. .venv/bin/python tests/test_hitl.py
-PYTHONPATH=. .venv/bin/python tests/test_end_to_end_real.py
+PYTHONPATH=. .venv/bin/python tests/test_ingestion.py       # 10/10
+PYTHONPATH=. .venv/bin/python tests/test_reconciliation.py  # 2/2
+PYTHONPATH=. .venv/bin/python tests/test_hitl.py            # full cycle
+PYTHONPATH=. .venv/bin/python tests/test_ap.py              # 7/7
+PYTHONPATH=. .venv/bin/python tests/test_ar.py              # 7/7
+PYTHONPATH=. .venv/bin/python tests/test_reporting.py       # 7/7
+PYTHONPATH=. .venv/bin/python tests/test_compliance.py      # 7/7
+PYTHONPATH=. .venv/bin/python tests/test_onboarding.py      # 7/7
+PYTHONPATH=. .venv/bin/python tests/test_end_to_end_real.py # 3/3
+PYTHONPATH=. .venv/bin/python tests/test_qbo_mcp.py         # QBO_MODE=mcp only
 ```
 
 Expected results:
-- `test_ingestion.py` — 9/9 passed
+- `test_ingestion.py` — 10/10 passed
 - `test_reconciliation.py` — 2/2 passed
 - `test_hitl.py` — full HITL cycle passed
+- `test_ap.py` — 7/7 passed
+- `test_ar.py` — 7/7 passed
+- `test_reporting.py` — 7/7 passed
+- `test_compliance.py` — 7/7 passed
+- `test_onboarding.py` — 7/7 passed
 - `test_end_to_end_real.py` — 3/3 passed
 
 ## Running the HITL Demo
@@ -90,6 +100,10 @@ HITL_WEBHOOK_BASE_URL=https://xxxx.ngrok-free.app
 ### Step 4 — Terminal 3: Demo script
 
 ```bash
+# Full end-to-end demo (primary)
+PYTHONPATH=. .venv/bin/python scripts/demo_end_to_end.py
+
+# Standalone HITL demo (HITL flow only)
 PYTHONPATH=. .venv/bin/python scripts/demo_hitl.py
 ```
 

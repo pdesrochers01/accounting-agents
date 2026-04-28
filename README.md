@@ -44,8 +44,8 @@ AccountingAgents builds on and extends the following works:
 | 3 | AP Agent | Approve vendor bills and payments | QBO MCP · Gmail MCP | ✅ |
 | 4 | AR Agent | Track overdue invoices; send collection reminders | QBO MCP · Gmail MCP | ✅ |
 | 5 | Reporting Agent | Generate P&L, cash flow; detect anomalies | QBO MCP · Gmail MCP | ✅ |
-| 6 | Compliance Agent | Monitor fiscal deadlines and regulatory obligations | QBO MCP · Calendar MCP | ⬜ |
-| 7 | Onboarding Agent | Create and validate new client profiles | QBO MCP · Gmail MCP | ⬜ |
+| 6 | Compliance Agent | Monitor fiscal deadlines and regulatory obligations | QBO MCP · Calendar MCP | ✅ |
+| 7 | Onboarding Agent | Create and validate new client profiles | QBO MCP · Gmail MCP | ✅ |
 | 8 | Supervisor | Orchestrate state, routing, and error handling | LangGraph StateGraph · checkpointer | ✅ |
 | 9 | HITL Notifier | Async approval via messaging; resume suspended thread | Gmail MCP · FastAPI · SqliteSaver | ✅ |
 
@@ -91,7 +91,7 @@ accounting-agents/
 ├── accounting_agents/
 │   ├── __init__.py
 │   ├── state.py              # SharedState TypedDict
-│   ├── graph.py              # LangGraph StateGraph (7 nodes)
+│   ├── graph.py              # LangGraph StateGraph (9 nodes)
 │   ├── routing.py            # Conditional routing functions
 │   ├── webhook.py            # FastAPI HITL webhook (port 5001)
 │   └── nodes/
@@ -100,9 +100,11 @@ accounting-agents/
 │       ├── hitl.py           # HITL node — interrupt() + notification
 │       ├── ap.py             # AP Agent (Phase 3)
 │       ├── ar.py             # AR Agent (Phase 3)
-│       └── reporting.py      # Reporting Agent (Phase 3)
+│       ├── reporting.py      # Reporting Agent (Phase 3)
+│       ├── compliance.py     # Compliance Agent (Phase 4)
+│       └── onboarding.py     # Onboarding Agent (Phase 4)
 ├── docs/
-│   ├── use-cases/            # UC01–UC06
+│   ├── use-cases/            # UC01–UC08
 │   ├── architecture.md       # System architecture reference
 │   ├── development-setup.md  # Local dev setup guide
 │   ├── demo.md               # Demo guide and talking points
@@ -116,6 +118,8 @@ accounting-agents/
 │   ├── test_ap.py            # 7/7 tests
 │   ├── test_ar.py            # 7/7 tests
 │   ├── test_reporting.py     # 7/7 tests
+│   ├── test_compliance.py    # 7/7 tests
+│   ├── test_onboarding.py    # 7/7 tests
 │   ├── test_end_to_end_real.py # 3/3 end-to-end tests
 │   └── test_qbo_mcp.py       # QBO MCP live integration test (QBO_MODE=mcp)
 ├── scripts/
@@ -181,7 +185,7 @@ PYTHONPATH=. .venv/bin/python tests/test_end_to_end_real.py
 
 ```bash
 # Terminal 1 — FastAPI webhook server
-PYTHONPATH=. python accounting_agents/webhook.py
+PYTHONPATH=. .venv/bin/python accounting_agents/webhook.py
 
 # Terminal 2 — ngrok tunnel
 ngrok http 5001
@@ -233,13 +237,13 @@ PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
 - [x] MVP implementation — Supervisor, Ingestion, Reconciliation, async HITL
 - [x] SharedState TypedDict + LangGraph StateGraph
 - [x] Async HITL cycle — interrupt() + FastAPI webhook + mobile approval
-- [x] Test suite — 36+ tests (unit + end-to-end), 3 fixture scenarios
+- [x] Test suite — 50+ tests (unit + end-to-end), 3 fixture scenarios
 - [x] Gmail MCP real integration (Phase 2)
 - [x] QBO MCP real integration (Phase 2)
 - [x] FastAPI webhook + Pydantic validation (Phase 2)
 - [x] LLM-based document classification (Phase 2, Pydantic AI)
 - [x] AR Agent + AP Agent + Reporting Agent (Phase 3)
-- [ ] Compliance Agent + Onboarding Agent (Phase 4)
+- [x] Compliance Agent + Onboarding Agent (Phase 4)
 - [ ] Experimental validation paper (agent accuracy, HITL approval rates)
 - [ ] Support for Xero, Sage, Microsoft Dynamics 365
 

@@ -1,39 +1,66 @@
-# UC04 — AR Collections Cycle
+# UC04 — AR Agent: Overdue Invoice Collections
 
-**Main actor**: AR Agent  
-**Trigger**: Routing signal `to_ar` from Supervisor
+## Summary
+The AR Agent monitors outstanding client invoices and triggers collection
+actions based on days overdue and amount. It sends automatic reminders for
+low-risk cases and escalates to HITL for disputed or high-value receivables.
+
+## Trigger
+- routing_signal == "to_ar" emitted by Supervisor after ingestion, or
+- scheduled run (daily)
+
+## Actors
+- AR Agent
+- Supervisor (routing)
+- Accountant (HITL approval for N3/N4 escalations)
 
 ## Preconditions
-- QBO MCP connected and authenticated
-- Gmail MCP connected and authenticated
-- SharedState initialized with `thread_id`
+- SharedState contains ar_invoices (or None → fixture used)
+- QBO MCP accessible (or AR_MODE=mock)
+- Gmail MCP accessible for reminder sending (or AR_MODE=mock)
 
 ## Main Flow
-1. AR Agent receives routing signal `to_ar` from Supervisor
-2. It queries QBO MCP for open invoices (status: unpaid) — AR_MODE=mock uses fixture data
-3. It filters by overdue threshold: invoices past due date
-4. For each overdue invoice, it calculates days overdue and outstanding amount
-5. It classifies the collection action by escalation level:
-   - N1: ≤ 30 days overdue AND amount < $5,000 CAD → auto-send reminder
-   - N2: 31–60 days overdue → send reminder + flag for notification
-   - N3: > 60 days overdue OR amount ≥ $5,000 CAD → set hitl_pending: true
-   - N4: disputed/unrecognized client → routing_signal: "unrecognized"
-6. For N1/N2: AR Agent writes reminder to hitl_emails/ (mock) or sends via Gmail MCP (mcp)
-7. It writes delta to SharedState (`ar_actions`, `routing_signal`)
-8. Supervisor routes: N3 → UC03 HITL cycle, otherwise `completed`
 
-## Alternate Flow — No Overdue Invoices
-- At step 3, if no invoices are past due date
-- AR Agent writes `routing_signal: "nothing_to_collect"` to SharedState
-- Supervisor closes cycle cleanly
+1. AR Agent reads ar_invoices from SharedState.
+   If None, loads fixture (3 fictional Quebec clients, CAD amounts).
 
-## Alternate Flow — N3 Escalation
-- At step 5, if threshold exceeded
-- AR Agent writes `hitl_pending: true` and invoice details to SharedState
-- Supervisor triggers UC03 — accountant approves escalation letter or legal referral
+2. For each invoice, computes days_overdue and classifies:
+   - days_overdue <= 0  → not yet due, skip
+   - 1–30 days         → N1: send first reminder automatically
+   - 31–60 days        → N2: send second reminder, notify accountant
+   - > 60 days         → N3: HITL required before escalation
+   - disputed flag     → N4: transfer to human
+
+3. AR Agent writes ar_results to SharedState:
+   - list[ARResult]: invoice_id, client_name, amount_cad, days_overdue,
+     action_taken, escalation_level
+
+4. routing_signal set based on highest escalation:
+   - All N1           → "completed"
+   - Any N2           → "to_hitl" (notify only)
+   - Any N3/N4        → "to_hitl" (approve required / transfer)
+
+## Escalation Examples
+
+| Days overdue | Amount    | Level | Action                        |
+|-------------|-----------|-------|-------------------------------|
+| 15 days     | $1,200    | N1    | First reminder sent (auto)    |
+| 45 days     | $3,400    | N2    | Second reminder + notify      |
+| 75 days     | $8,750    | N3    | HITL before collections firm  |
+| Any         | Disputed  | N4    | Transfer to accountant        |
 
 ## Postconditions
-- All collection actions recorded in SharedState (`ar_actions`)
-- Reminder emails sent for N1/N2 cases
-- HITL triggered for N3 cases
-- Routing signal emitted
+- ar_results written to SharedState
+- Reminders written to hitl_emails/ar_reminder_{invoice_id}.json (mock)
+- HITL triggered if N2/N3/N4 detected
+
+## Environment Modes
+- AR_MODE=mock  → fixture invoices, reminders saved to hitl_emails/ (default)
+- AR_MODE=mcp   → live QBO MCP + Gmail MCP (Phase 4+)
+
+## SharedState Fields Used
+- ar_invoices: Optional[list[ARInvoice]]  (read)
+- ar_results: list[ARResult]              (write)
+- routing_signal                          (write)
+- hitl_pending                            (write if N2/N3/N4)
+- error_log                               (write on error)
