@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(PYTHONPATH=. CLASSIFICATION_MODE=keyword QBO_MODE=mock AP_MODE=mock AR_MODE=mock .venv/bin/python tests/benchmark/run_benchmark.py)"
+    ]
+  }
+}

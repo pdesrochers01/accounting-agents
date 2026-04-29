@@ -121,7 +121,8 @@ accounting-agents/
 │   ├── test_compliance.py    # 7/7 tests
 │   ├── test_onboarding.py    # 7/7 tests
 │   ├── test_end_to_end_real.py # 3/3 end-to-end tests
-│   └── test_qbo_mcp.py       # QBO MCP live integration test (QBO_MODE=mcp)
+│   ├── test_qbo_mcp.py       # QBO MCP live integration test (QBO_MODE=mcp)
+│   └── benchmark/            # 65-case deterministic benchmark
 ├── scripts/
 │   ├── demo_end_to_end.py    # End-to-end narrative demo (Phase 2)
 │   ├── demo_hitl.py          # Standalone HITL demo script
@@ -244,6 +245,9 @@ PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
 - [x] LLM-based document classification (Phase 2, Pydantic AI)
 - [x] AR Agent + AP Agent + Reporting Agent (Phase 3)
 - [x] Compliance Agent + Onboarding Agent (Phase 4)
+- [x] Experimental benchmark — 65 deterministic test cases,
+      fully reproducible without API calls (tests/benchmark/)
+      Results: Ingestion 83.3% | Reconciliation 100% | Overall 72.3%
 - [ ] AP vendor registry — replace static KNOWN_VENDORS list
       with live QBO MCP list_vendors query (AP_MODE=mcp);
       mock mode to use enriched fixture vendor list
