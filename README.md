@@ -258,6 +258,56 @@ PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
       (multilingual support requires CLASSIFICATION_MODE=llm)
 - [ ] Support for Xero, Sage, Microsoft Dynamics 365
 
+### Production Readiness Roadmap
+
+**Tier 1 — Production blockers (required before any deployment)**
+- [ ] Webhook HMAC signature validation — prevent unauthorized
+      /webhook?decision=approve calls
+- [ ] Secrets management — replace .env with AWS Secrets Manager,
+      HashiCorp Vault, or equivalent
+- [ ] TLS + rate limiting on FastAPI webhook endpoint
+- [ ] Immutable audit log — every agent action logged externally
+      with: agent, action, client_id, amount, decision, timestamp
+      (regulatory obligation in accounting — SharedState alone
+      is insufficient)
+- [ ] QBO write idempotence — duplicate Approve clicks must not
+      create duplicate payments (most costly production bug)
+- [ ] Retry logic + circuit breaker on all MCP calls (QBO, Gmail)
+
+**Tier 2 — Important, deployable incrementally**
+- [ ] Structured JSON logging → Datadog / CloudWatch / Grafana Loki
+- [ ] Distributed tracing on LangGraph graphs (LangSmith or
+      OpenTelemetry)
+- [ ] Key metrics: latency per agent, HITL rate per level,
+      timeout rate
+- [ ] Multi-tenancy — thread and data isolation per client_id;
+      SharedState partitioned by tenant (today: single-client only)
+- [ ] GDPR — right to erasure per client, data residency policy,
+      encryption at rest for SQLite checkpoints
+
+**Tier 3 — Scaling and operations**
+- [ ] SQLiteSaver → PostgresSaver (LangGraph) for multi-instance
+      horizontal scaling
+- [ ] Queue-based ingestion (SQS, Cloud Tasks) for volume spikes
+- [ ] Alerting: N4 timeout unresolved, MCP error rate > threshold,
+      webhook unreachable
+- [ ] Canary deployments + shadow mode (run agents in parallel
+      without acting, compare decisions)
+
+**Accounting-specific requirements**
+- [ ] SOC 2 Type II (if serving US clients)
+- [ ] Document retention policy — 7-year retention (Canada)
+- [ ] Segregation of duties — an agent must not both approve
+      and execute the same action
+
+**Recommended sprint sequence**
+
+  Sprint 1: Webhook HMAC + secrets management + immutable audit log
+  Sprint 2: Structured logging + MCP retry/circuit breaker
+  Sprint 3: Multi-tenancy + GDPR
+  Sprint 4: PostgresSaver + horizontal scaling
+  Sprint 5: Full observability + alerting
+
 ---
 
 ## Citation
