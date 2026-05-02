@@ -272,6 +272,13 @@ PYTHONPATH=. .venv/bin/python scripts/cleanup_qbo_bills.py
       is insufficient)
 - [ ] QBO write idempotence — duplicate Approve clicks must not
       create duplicate payments (most costly production bug)
+- [ ] LLM provider — Canadian-hosted infrastructure required for
+      production under Quebec Law 25 (art. 17, cross-border data
+      transfer). Target stack: Amazon Bedrock Marketplace (ca-central-1)
+      + DeepSeek-R1. US-based LLM endpoints (Anthropic API, OpenAI)
+      are non-compliant for workloads processing real accounting
+      client data. CLASSIFICATION_MODEL in .env is already
+      configurable — migration impact is minimal.
 - [ ] Retry logic + circuit breaker on all MCP calls (QBO, Gmail)
 
 **Tier 2 — Important, deployable incrementally**

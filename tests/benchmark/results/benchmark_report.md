@@ -1,5 +1,5 @@
 # AccountingAgents — Benchmark Report
-Generated: 2026-04-28T18:40:02
+Generated: 2026-05-02T08:25:18
 Dataset: 65 test cases | Mode: CLASSIFICATION_MODE=keyword | No API calls
 
 ---
